@@ -1,0 +1,162 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 30px;
+    font-family: Arial, sans-serif;
+    color: #222;
+}
+
+h1,
+h2 {
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 35px;
+    font-weight: normal;
+}
+
+.examples {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 35px;
+}
+
+.example {
+    width: 340px;
+}
+
+h3 {
+    margin-bottom: 12px;
+}
+
+.flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    min-height: 250px;
+    padding: 10px;
+    background: #f2f2f2;
+}
+
+.box {
+    width: 110px;
+    height: 90px;
+    padding: 8px;
+}
+
+.box-static {
+    position: static;
+    background: lightblue;
+}
+
+.box-relative-1 {
+    position: relative;
+    top: 18px;
+    left: 15px;
+    background: lightgreen;
+}
+
+.box-relative-2 {
+    position: relative;
+    top: 40px;
+    left: -10px;
+    background: pink;
+}
+
+.container {
+    position: relative;
+    height: 250px;
+    background: lightgray;
+}
+
+.box-absolute-1,
+.box-absolute-2,
+.box-absolute-3 {
+    position: absolute;
+}
+
+.box-absolute-1 {
+    top: 30px;
+    left: 25px;
+    z-index: 3;
+    background: coral;
+}
+
+.box-absolute-2 {
+    top: 75px;
+    left: 85px;
+    z-index: 2;
+    background: skyblue;
+}
+
+.box-absolute-3 {
+    top: 120px;
+    left: 145px;
+    z-index: 1;
+    background: purple;
+    color: white;
+}
+
+.overlap {
+    position: relative;
+    height: 250px;
+    background: #f2f2f2;
+}
+
+.box-zindex-1,
+.box-zindex-2 {
+    position: absolute;
+}
+
+.box-zindex-1 {
+    top: 45px;
+    left: 45px;
+    z-index: 5;
+    background: lightcoral;
+}
+
+.box-zindex-2 {
+    top: 90px;
+    left: 100px;
+    z-index: 4;
+    background: lightseagreen;
+}
+
+.box-fixed-1,
+.box-fixed-2 {
+    position: fixed;
+    width: 100px;
+    height: 70px;
+    padding: 8px;
+}
+
+.box-fixed-1 {
+    top: 10px;
+    right: 10px;
+    background: yellow;
+}
+
+.box-fixed-2 {
+    bottom: 10px;
+    left: 10px;
+    background: orange;
+}
+
+@media (max-width: 720px) {
+    body {
+        margin: 20px 12px;
+    }
+
+    .examples {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .example {
+        max-width: 100%;
+    }
+}
