@@ -1,4 +1,3 @@
-/* Обычные блоки идут друг под другом. */
 .box-static {
     position: static;
     width: 80px;
@@ -7,7 +6,6 @@
     background: lightblue;
 }
 
-/* Смещение не изменяет место блока в потоке. */
 .box-relative-1 {
     position: relative;
     top: 15px;
@@ -26,7 +24,6 @@
     background: pink;
 }
 
-/* Этот контейнер служит точкой отсчёта для absolute. */
 .container {
     position: relative;
     width: 300px;
@@ -65,7 +62,6 @@
     z-index: 1;
 }
 
-/* Эти блоки расположены вне серого контейнера. */
 .box-zindex-1 {
     position: absolute;
     top: 40px;
@@ -86,7 +82,6 @@
     z-index: 4;
 }
 
-/* Fixed остаётся на месте при прокрутке страницы. */
 .box-fixed-1 {
     position: fixed;
     top: 0;

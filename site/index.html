@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Дмитрий Некрашевич — менеджер по продажам авто</title>
+  <meta name="description" content="Дмитрий Некрашевич — менеджер по продажам авто. Подбор и привоз автомобилей из Китая, Кореи, Европы и США под ключ.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23FC4F00'/%3E%3Cpath d='M14 46V18h14c10 0 16 5 16 14s-6 14-16 14zm9-8h4c5 0 8-2 8-6s-3-6-8-6h-4z' fill='%230a0a0a'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="motion.css">
+</head>
+<body>
+  <a class="skip-link" href="#home">К содержимому</a>
+
+  <!-- Загрузочный экран -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader__top"><span>Дмитрий Некрашевич</span><span>Sales Manager</span></div>
+    <div class="loader__num"><span id="loaderNum">0</span><small>%</small></div>
+    <div class="loader__bar"><i id="loaderBar"></i></div>
+  </div>
+
+  <!-- Курсор и индикатор прокрутки -->
+  <div class="cursor" id="cursor" aria-hidden="true"><span id="cursorLabel"></span></div>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <!-- Шапка и меню -->
+  <header class="header" id="header">
+    <a href="#home" class="logo" aria-label="На главную">
+      <span class="logo__mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none">
+          <circle class="lg-ring" cx="32" cy="32" r="29" />
+          <path class="lg-d" d="M17 20v24h8c8.5 0 13-4.8 13-12s-4.5-12-13-12z" />
+          <path class="lg-n" d="M30 44V20l16 24V20" />
+          <path class="lg-speed" d="M8 50h20M4 55h14" />
+        </svg>
+      </span>
+      <span class="logo__text">Некрашевич<small>АВТОМОБИЛИ ПОД КЛЮЧ</small></span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Основное меню">
+      <ul class="nav__list">
+        <li><a href="#home" class="nav__link" data-num="01"><span class="roll">Главная</span></a></li>
+        <li><a href="#achievements" class="nav__link" data-num="02"><span class="roll">Достижения</span></a></li>
+        <li><a href="#tech" class="nav__link" data-num="03"><span class="roll">Технологии</span></a></li>
+        <li><a href="#cars" class="nav__link" data-num="04"><span class="roll">Галерея</span></a></li>
+        <li><a href="catalog.html" class="nav__link"><span class="roll">Каталог ↗</span></a></li>
+        <li><a href="customs.html" class="nav__link"><span class="roll">Растаможка ↗</span></a></li>
+        <li><a href="#contact" class="nav__link" data-num="05"><span class="roll">Контакты</span></a></li>
+      </ul>
+    </nav>
+
+    <a href="mailto:nixon0293@gmail.com" class="header__cta btn btn--small"><span class="roll">Связаться</span></a>
+
+    <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <main>
+
+    <!-- ===================== СЕКЦИЯ 1: HERO ===================== -->
+    <section class="hero" id="home" data-theme="dark">
+      <div class="hero__ghost" aria-hidden="true" data-hshift="-0.12">Некрашевич</div>
+
+      <div class="hero__inner">
+        <div class="hero__text">
+          <p class="hero__tag"><i class="dot"></i> Минск, Беларусь</p>
+
+          <h1 class="hero__title" id="heroTitle">
+            <span class="line"><span>Ваше авто.</span></span>
+            <span class="line"><span>Мой <em>маршрут.</em></span></span>
+          </h1>
+
+          <h2 class="hero__subtitle">Я Дмитрий Некрашевич. Подбираю и привожу автомобили под ключ.</h2>
+
+          <p class="hero__desc">
+            Веду сделку на всех этапах: считаю итоговую стоимость, проверяю авто, договариваюсь,
+            организую доставку и оформление. От запроса клиента до передачи ключей.
+          </p>
+
+          <div class="hero__actions">
+            <a href="mailto:nixon0293@gmail.com" class="btn btn--primary magnetic"><span class="roll">Связаться со мной</span><b class="btn__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></b></a>
+            <a href="catalog.html" class="btn btn--ghost magnetic"><span class="roll">Каталог автомобилей ↗</span></a>
+          </div>
+        </div>
+
+        <div class="hero__visual" id="heroVisual" data-cursor="Смотри">
+          <span class="hero__arch-back" aria-hidden="true"></span>
+          <div class="arch" id="arch">
+            <img class="arch__img arch__img--portrait" src="img/photo.jpg" alt="Дмитрий Некрашевич" width="400" height="400">
+          </div>
+
+          <ul class="pills" aria-hidden="true">
+            <li class="pill pill--a">200+ клиентов</li>
+            <li class="pill pill--b">Под ключ</li>
+            <li class="pill pill--c">4 страны</li>
+          </ul>
+          <svg class="badge" id="badge" viewBox="0 0 120 120" aria-hidden="true">
+            <defs><path id="badgePath" d="M60 60 m-46 0 a46 46 0 1 1 92 0 a46 46 0 1 1 -92 0"/></defs>
+            <circle cx="60" cy="60" r="58" class="badge__bg"/>
+            <g class="badge__ring">
+              <text><textPath href="#badgePath" textLength="284" lengthAdjust="spacing">Подбор • Доставка • Оформление • Ключи •</textPath></text>
+            </g>
+            <path class="badge__arrow" d="M44 44l32 32M52 76h24V52"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="drive-scene drive-scene--hero" aria-hidden="true"><div class="drive-scene__haze"></div><div class="drive-scene__horizon"></div><div class="drive-scene__road"></div><div class="drive-car"><div class="drive-car__shadow"></div><div class="drive-car__body"><img src="img/drive-coupe.webp" alt="" width="1536" height="512"><span class="drive-wheel drive-wheel--rear"></span><span class="drive-wheel drive-wheel--front"></span><span class="drive-car__tail"></span><span class="drive-car__beam"></span></div></div></div>
+      <div class="hero-route"><span>Китай / Корея / Европа / США</span><span>От первого запроса до передачи ключей ↗</span></div>
+      <button class="motion-toggle" type="button" aria-pressed="false">Ⅱ Пауза движения</button>
+      <a href="#achievements" class="scroll-down" aria-label="К следующей секции"><i></i><span>Листай</span></a>
+
+      <div class="marquee" id="marquee" aria-hidden="true">
+        <div class="marquee__track" id="marqueeTrack">
+          <span>Китай</span><b>✱</b><span>Корея</span><b>✱</b><span>Европа</span><b>✱</b><span>США</span><b>✱</b>
+          <span>Китай</span><b>✱</b><span>Корея</span><b>✱</b><span>Европа</span><b>✱</b><span>США</span><b>✱</b>
+          <span>Китай</span><b>✱</b><span>Корея</span><b>✱</b><span>Европа</span><b>✱</b><span>США</span><b>✱</b>
+          <span>Китай</span><b>✱</b><span>Корея</span><b>✱</b><span>Европа</span><b>✱</b><span>США</span><b>✱</b>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== СЕКЦИЯ 2: МОИ ДОСТИЖЕНИЯ (Flexbox) ===================== -->
+    <section class="achievements" id="achievements" data-theme="orange">
+      <div class="ghost" aria-hidden="true" data-hshift="0.1">Результат</div>
+
+      <div class="achievements__container">
+        <header class="section-head">
+          <span class="section-head__num">02 — Результаты</span>
+          <h2 class="section-head__title">Мои <em>достижения</em></h2>
+          <p class="section-head__lead scrub">Цифры из реальной работы: что получилось улучшить и сколько времени удалось сэкономить.</p>
+        </header>
+
+        <div class="cards">
+
+          <article class="card reveal tilt" data-cursor="Цифры">
+            <div class="card__media">
+              <span class="card__idx">01</span>
+              <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="24" cy="24" r="9"/><circle cx="44" cy="26" r="7"/><path d="M8 52c0-9 7-15 16-15s16 6 16 15M38 40c8-2 18 2 18 12"/></svg>
+            </div>
+            <div class="card__body">
+              <div class="card__big" data-count="200" data-suffix="+" data-unit="клиентов">0</div>
+              <h3 class="card__title">Анализ базы клиентов</h3>
+              <p class="card__text">Проанализировал воронку продаж, конверсию и средний чек по 200+ клиентам.</p>
+              <button class="btn btn--card more" type="button" aria-expanded="false"><span>Подробнее</span></button>
+              <p class="card__more">Консультировал клиентов и сопровождал сделки: от первого запроса до оформления.</p>
+            </div>
+          </article>
+
+          <article class="card reveal tilt" data-cursor="Цифры">
+            <div class="card__media">
+              <span class="card__idx">02</span>
+              <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="34" r="20"/><path d="M32 34V20M32 34l10 6M26 8h12"/></svg>
+            </div>
+            <div class="card__body">
+              <div class="card__big" data-count="30" data-prefix="−" data-suffix="%">0</div>
+              <h3 class="card__title">Быстрее обработка запросов</h3>
+              <p class="card__text">Внедрил чек-листы и шаблоны, и время обработки запросов сократилось на 30%.</p>
+              <button class="btn btn--card more" type="button" aria-expanded="false"><span>Подробнее</span></button>
+              <p class="card__more">Заодно адаптация новых сотрудников ускорилась в 2 раза.</p>
+            </div>
+          </article>
+
+          <article class="card reveal tilt" data-cursor="Цифры">
+            <div class="card__media">
+              <span class="card__idx">03</span>
+              <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="12" width="44" height="40" rx="6"/><path d="M10 24h44M22 36l6 6 14-14"/></svg>
+            </div>
+            <div class="card__body">
+              <div class="card__big" data-count="20" data-suffix="+" data-unit="ч / нед">0</div>
+              <h3 class="card__title">Автоматизация CRM</h3>
+              <p class="card__text">Автоматизировал процессы через Google Apps Script и сократил ручную работу на 20+ часов в неделю.</p>
+              <button class="btn btn--card more" type="button" aria-expanded="false"><span>Подробнее</span></button>
+              <p class="card__more">Рутинные действия в CRM вынесены в скрипты.</p>
+            </div>
+          </article>
+
+          <article class="card reveal tilt" data-cursor="Цифры">
+            <div class="card__media">
+              <span class="card__idx">04</span>
+              <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M6 40l6-14c1-3 3-4 6-4h24c3 0 5 1 7 4l7 10c1 1 2 2 2 4v4H6z"/><circle cx="20" cy="46" r="6"/><circle cx="46" cy="46" r="6"/></svg>
+            </div>
+            <div class="card__body">
+              <div class="card__big" data-count="4" data-unit="региона">0</div>
+              <h3 class="card__title">Авто под ключ</h3>
+              <p class="card__text">Подбирал и сопровождал покупку автомобилей из Китая, Кореи, Европы и США до передачи клиенту.</p>
+              <button class="btn btn--card more" type="button" aria-expanded="false"><span>Подробнее</span></button>
+              <p class="card__more">Подбор и продажа автомобилей: веду сделки на всех этапах.</p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== СЕКЦИЯ 3: ТЕХНОЛОГИИ (Grid) ===================== -->
+    <section class="tech" id="tech" data-theme="light">
+      <div class="ghost" aria-hidden="true" data-hshift="-0.1">Инструменты</div>
+
+      <div class="tech__container">
+        <header class="section-head">
+          <span class="section-head__num">03 — Инструменты</span>
+          <h2 class="section-head__title">Технологии, которыми я <em>владею</em></h2>
+          <p class="section-head__lead scrub">Продавать удобнее, когда рутину делают скрипты. Вот чем я пользуюсь в работе.</p>
+        </header>
+
+        <div class="tech-grid">
+
+          <article class="tcard tcard--wide reveal">
+            <span class="tcard__idx">01</span>
+            <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6c-7 0-9 3-9 6v4h10v2H11c-4 0-6 4-6 8s2 8 6 8h3v-5c0-3 3-6 6-6h10c3 0 5-2 5-5v-7c0-3-4-5-11-5z"/><path d="M24 42c7 0 9-3 9-6v-4H23v-2h14c4 0 6-4 6-8s-2-8-6-8h-3v5c0 3-3 6-6 6H18c-3 0-5 2-5 5v7c0 3 4 5 11 5z"/></svg></div>
+            <div class="tcard__text">
+              <h3>Python</h3>
+              <p>Пишу скрипты и работаю с API. На Python сделан и бот с дашбордом для заказов.</p>
+              <ul class="tags"><li>скрипты</li><li>API</li><li>автоматизация</li></ul>
+            </div>
+          </article>
+
+          <article class="tcard reveal">
+            <span class="tcard__idx">02</span>
+            <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="8" width="34" height="32" rx="5"/><path d="M7 18h34M17 26l-4 4 4 4M31 26l4 4-4 4M26 24l-4 12"/></svg></div>
+            <div class="tcard__text">
+              <h3>Google Apps Script</h3>
+              <p>Автоматизирую рутину в CRM и таблицах.</p>
+            </div>
+          </article>
+
+          <article class="tcard reveal">
+            <span class="tcard__idx">03</span>
+            <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 24h10l4-12 8 24 4-12h10"/></svg></div>
+            <div class="tcard__text">
+              <h3>REST API и Postman</h3>
+              <p>Подключаю сервисы друг к другу и проверяю запросы.</p>
+            </div>
+          </article>
+
+          <article class="tcard tcard--wide reveal">
+            <span class="tcard__idx">04</span>
+            <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M42 8L6 22l10 4 4 12 6-7 9 7z"/><path d="M16 26l26-18"/></svg></div>
+            <div class="tcard__text">
+              <h3>Telegram-бот и дашборд</h3>
+              <p>Свой проект: бот и панель, которые уведомляют о заказах и показывают их статус.</p>
+              <ul class="tags"><li>уведомления</li><li>мониторинг заказов</li></ul>
+            </div>
+          </article>
+
+          <article class="tcard reveal">
+            <span class="tcard__idx">05</span>
+            <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="16"/><circle cx="24" cy="24" r="6"/><path d="M24 8v10M24 30v10M8 24h10M30 24h10"/></svg></div>
+            <div class="tcard__text">
+              <h3>RetailCRM</h3>
+              <p>Веду клиентскую базу и сделки.</p>
+            </div>
+          </article>
+
+          <article class="tcard reveal">
+            <span class="tcard__idx">06</span>
+            <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><ellipse cx="24" cy="12" rx="15" ry="6"/><path d="M9 12v12c0 3 7 6 15 6s15-3 15-6V12M9 24v12c0 3 7 6 15 6s15-3 15-6V24"/></svg></div>
+            <div class="tcard__text">
+              <h3>Supabase (PostgreSQL)</h3>
+              <p>Храню данные заказов и связываю с CRM через API.</p>
+            </div>
+          </article>
+
+          <article class="tcard reveal">
+            <span class="tcard__idx">07</span>
+            <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="8" width="10" height="32" rx="3"/><rect x="19" y="8" width="10" height="22" rx="3"/><rect x="32" y="8" width="10" height="27" rx="3"/></svg></div>
+            <div class="tcard__text">
+              <h3>Notion, Trello, Kaiten</h3>
+              <p>Управляю задачами и процессами команды.</p>
+            </div>
+          </article>
+
+          <article class="tcard reveal">
+            <span class="tcard__idx">08</span>
+            <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="12" y="12" width="24" height="24" rx="5"/><path d="M20 20h8v8h-8zM18 6v6M30 6v6M18 36v6M30 36v6M6 18h6M6 30h6M36 18h6M36 30h6"/></svg></div>
+            <div class="tcard__text">
+              <h3>AI-инструменты</h3>
+              <p>Прошёл курс AI for Business &amp; Productivity и применяю ИИ для анализа.</p>
+            </div>
+          </article>
+
+          <article class="tcard tcard--wide reveal">
+            <span class="tcard__idx">09</span>
+            <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M16 14L6 24l10 10M32 14l10 10-10 10M27 10l-6 28"/></svg></div>
+            <div class="tcard__text">
+              <h3>HTML, CSS и JavaScript</h3>
+              <p>Учусь верстать: этот сайт собран на чистом HTML, CSS (Flexbox и Grid) и JavaScript.</p>
+              <ul class="tags"><li>Flexbox</li><li>Grid</li><li>адаптив</li></ul>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ГАЛЕРЕЯ ===================== -->
+    <section class="cars" id="cars" data-theme="dark">
+      <div class="cars__glow" aria-hidden="true"></div>
+      <div class="cars__container">
+        <header class="section-head">
+          <span class="section-head__num">04 — Галерея</span>
+          <h2 class="section-head__title">Привожу авто, <em>о которых</em> мечтают</h2>
+          <p class="section-head__lead scrub">Любая марка и любая комплектация. Найду, проверю, довезу и оформлю.</p>
+        </header>
+
+        <div class="gallery">
+          <figure class="shot shot--tall reveal" data-cursor="Авто">
+            <div class="shot__frame"><img src="img/gallery-bmw.jpg" alt="Реальная фотография BMW M4 на дороге" loading="lazy" width="488" height="627"></div>
+            <figcaption><i>01</i> Подбор <em>под вас</em></figcaption>
+          </figure>
+          <figure class="shot shot--wide reveal" data-cursor="Авто">
+            <div class="shot__frame"><img src="img/gallery-porsche.jpg" alt="Реальная фотография чёрного Porsche 911 в городе" loading="lazy" width="864" height="570"></div>
+            <figcaption><i>02</i> Проверка <em>до покупки</em></figcaption>
+          </figure>
+          <figure class="shot shot--mid reveal" data-cursor="Авто">
+            <div class="shot__frame"><img src="img/gallery-road.jpg" alt="Реальная фотография белого Porsche 911 на загородной дороге" loading="lazy" width="780" height="981"></div>
+            <figcaption><i>03</i> Доставка <em>без хлопот</em></figcaption>
+          </figure>
+        </div>
+        <div class="gallery-bottom"><p>Автомобили для вдохновения · фотографии Unsplash</p><a href="catalog.html">Перейти в каталог автомобилей ↗</a></div>
+      </div>
+    </section>
+
+    <!-- ===================== ВЫЕЗД МАШИНЫ ПРИ ПРОКРУТКЕ ===================== -->
+    <section class="roadshow" id="roadshow" data-theme="dark" aria-label="Автомобиль в пути">
+      <div class="roadshow__sticky">
+        <div class="journey-heading"><span class="section-head__num">Движение к вашей цели</span><h2>Ближе с каждым<br><em>километром.</em></h2><p>Подбор. Проверка. Доставка. Ваш автомобиль в надёжных руках.</p></div>
+        <div class="drive-scene drive-scene--journey" aria-hidden="true"><div class="drive-scene__haze"></div><div class="drive-scene__horizon"></div><div class="drive-scene__road"></div><div class="drive-car"><div class="drive-car__shadow"></div><div class="drive-car__body"><img src="img/drive-coupe.webp" alt="" width="1536" height="512"><span class="drive-wheel drive-wheel--rear"></span><span class="drive-wheel drive-wheel--front"></span><span class="drive-car__tail"></span><span class="drive-car__beam"></span></div></div></div>
+        <div class="journey-bottom"><span>ОТ ЗАПРОСА</span><div class="journey-progress"><i></i></div><span>ДО ВАШЕГО ГАРАЖА ↗</span></div>
+      </div>
+    </section>
+
+    <!-- ===================== РАСЧЁТ СТОИМОСТИ ===================== -->
+    <section class="calc" id="calc" data-theme="dark">
+      <div class="calc__container">
+        <header class="section-head">
+          <span class="section-head__num">05 — Расчёт</span>
+          <h2 class="section-head__title">Рассчитаем <em>стоимость</em> под ключ</h2>
+          <p class="section-head__lead scrub">Скажите, какое авто хотите и на какой бюджет рассчитываете. Пришлю варианты и итоговую цену с доставкой и оформлением.</p>
+        </header>
+
+        <!-- Замени EMAIL_DRAFT на идентификатор формы из getform.io -->
+        <form class="calc__form reveal" id="calcForm" action="mailto:nixon0293@gmail.com" method="POST" novalidate>
+          <input type="hidden" name="form" value="Расчёт стоимости">
+          <fieldset class="field">
+            <legend>Откуда привезти</legend>
+            <div class="chips">
+              <input type="radio" id="cChina" name="country" value="Китай" checked><label for="cChina">Китай</label>
+              <input type="radio" id="cKorea" name="country" value="Корея"><label for="cKorea">Корея</label>
+              <input type="radio" id="cEurope" name="country" value="Европа"><label for="cEurope">Европа</label>
+              <input type="radio" id="cUsa" name="country" value="США"><label for="cUsa">США</label>
+            </div>
+          </fieldset>
+
+          <div class="calc__row">
+            <div class="field">
+              <label for="cCar">Марка и модель</label>
+              <input type="text" id="cCar" name="car" placeholder="Например, Geely Monjaro" required>
+              <span class="error" data-for="cCar"></span>
+            </div>
+            <div class="field">
+              <label for="cBudget">Бюджет, USD</label>
+              <input type="text" id="cBudget" name="budget" inputmode="numeric" placeholder="25000" required>
+              <span class="error" data-for="cBudget"></span>
+            </div>
+            <div class="field">
+              <label for="cYear">Год не старше</label>
+              <select id="cYear" name="year">
+                <option value="любой">Любой</option>
+                <option value="2026">2026</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2022">2022</option>
+                <option value="2020">2020</option>
+                <option value="2018">2018</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="cContact">Как с вами связаться</label>
+            <input type="text" id="cContact" name="contact" placeholder="Телефон или @telegram" required>
+            <span class="error" data-for="cContact"></span>
+          </div>
+
+          <div class="calc__foot">
+            <p class="calc__summary" id="calcSummary" aria-live="polite"></p>
+            <button type="submit" class="btn btn--primary magnetic" id="calcBtn"><span class="roll">Подготовить запрос</span><b class="btn__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></b></button>
+          </div>
+          <p class="form-note">Запрос откроется в вашей почте. Проверьте письмо и отправьте его Дмитрию.</p>
+          <p class="form__status" id="calcStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================== КОНТАКТЫ И ФОРМА ===================== -->
+    <section class="contact" id="contact" data-theme="dark">
+      <div class="contact__container">
+        <header class="section-head">
+          <span class="section-head__num">06 — Связь</span>
+          <h2 class="section-head__title">Давайте обсудим вашу <em>задачу</em></h2>
+          <p class="section-head__lead scrub">Напишите, какое авто ищете и какой у вас бюджет. Отвечу и предложу варианты.</p>
+        </header>
+
+        <a class="contact__mail" href="mailto:nixon0293@gmail.com"><span class="roll">nixon0293@gmail.com</span></a>
+
+        <div class="contact__grid">
+          <ul class="contact__list reveal">
+            <li>
+              <span class="label">Телефон</span>
+              <a href="tel:+375291138597">+375 (29) 113-85-97</a>
+            </li>
+            <li>
+              <span class="label">Почта</span>
+              <a href="mailto:nixon0293@gmail.com">nixon0293@gmail.com</a>
+            </li>
+            <li>
+              <span class="label">Город</span>
+              <span class="value">Минск, Беларусь</span>
+            </li>
+          </ul>
+
+          <!-- Замени EMAIL_DRAFT на идентификатор формы из getform.io -->
+          <form class="form reveal" id="feedbackForm" action="mailto:nixon0293@gmail.com" method="POST" novalidate>
+            <div class="field">
+              <label for="fName">Ваше имя</label>
+              <input type="text" id="fName" name="name" placeholder="Как к вам обращаться" required autocomplete="name">
+              <span class="error" data-for="fName"></span>
+            </div>
+            <div class="field">
+              <label for="fEmail">Email</label>
+              <input type="email" id="fEmail" name="email" placeholder="name@example.com" required autocomplete="email">
+              <span class="error" data-for="fEmail"></span>
+            </div>
+            <div class="field">
+              <label for="fMsg">Сообщение или отзыв</label>
+              <textarea id="fMsg" name="message" rows="3" placeholder="Какое авто нужно или что понравилось на сайте" required></textarea>
+              <span class="error" data-for="fMsg"></span>
+            </div>
+            <fieldset class="field rating">
+              <legend>Оценка сайта</legend>
+              <div class="stars">
+                <input type="radio" id="s5" name="rating" value="5"><label for="s5" title="5">★</label>
+                <input type="radio" id="s4" name="rating" value="4"><label for="s4" title="4">★</label>
+                <input type="radio" id="s3" name="rating" value="3"><label for="s3" title="3">★</label>
+                <input type="radio" id="s2" name="rating" value="2"><label for="s2" title="2">★</label>
+                <input type="radio" id="s1" name="rating" value="1"><label for="s1" title="1">★</label>
+              </div>
+            </fieldset>
+            <button type="submit" class="btn btn--primary magnetic" id="submitBtn"><span class="roll">Подготовить письмо</span><b class="btn__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></b></button>
+            <p class="form-note">Откроется почтовое приложение с готовым письмом.</p>
+            <p class="form__status" id="formStatus" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+
+      <div class="marquee marquee--contact" aria-hidden="true">
+        <div class="marquee__track" id="marqueeTrack2">
+          <span>Поехали</span><b>✱</b><span>Напишите</span><b>✱</b><span>Подберём</span><b>✱</b><span>Привезём</span><b>✱</b>
+          <span>Поехали</span><b>✱</b><span>Напишите</span><b>✱</b><span>Подберём</span><b>✱</b><span>Привезём</span><b>✱</b>
+          <span>Поехали</span><b>✱</b><span>Напишите</span><b>✱</b><span>Подберём</span><b>✱</b><span>Привезём</span><b>✱</b>
+          <span>Поехали</span><b>✱</b><span>Напишите</span><b>✱</b><span>Подберём</span><b>✱</b><span>Привезём</span><b>✱</b>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <span>© 2026 Дмитрий Некрашевич</span>
+    <span>Минск · Sales Manager</span>
+    <a href="#home" class="footer__up"><span class="roll">Наверх ↑</span></a>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="motion.js"></script>
+  <script src="effects.js"></script>
+</body>
+</html>

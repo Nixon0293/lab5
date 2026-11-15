@@ -1,0 +1,772 @@
+/* =========================================================
+   Сайт-визитка · Дмитрий Некрашевич
+   Анимации, меню, форма. Чистый JavaScript, без библиотек.
+   ========================================================= */
+(function () {
+  "use strict";
+
+  var root = document.documentElement;
+  root.classList.add("js");
+
+  var $ = function (sel, ctx) { return (ctx || document).querySelector(sel); };
+  var $$ = function (sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); };
+  var clamp = function (v, a, b) { return Math.min(b, Math.max(a, v)); };
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  var stackMQ = window.matchMedia("(min-width: 901px) and (min-height: 680px)");
+
+  var body = document.body;
+  var hero = $("#home");
+  var header = $("#header");
+
+  /* ---------------------------------------------------------
+     1. Подготовка текста
+     --------------------------------------------------------- */
+
+  // «рулетка»: дублируем текст, чтобы при наведении он прокручивался
+  $$(".roll").forEach(function (el) {
+    var text = el.textContent;
+    el.innerHTML = "<span>" + text + "</span><span aria-hidden=\"true\">" + text + "</span>";
+  });
+
+  // заголовок hero: строки -> слова -> буквы
+  function wrapChars(node, counter) {
+    Array.prototype.slice.call(node.childNodes).forEach(function (child) {
+      if (child.nodeType === 3) {
+        var frag = document.createDocumentFragment();
+        child.textContent.split(/(\s+)/).forEach(function (part) {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(" ")); return; }
+          var wd = document.createElement("span");
+          wd.className = "wd";
+          part.split("").forEach(function (ch) {
+            var s = document.createElement("span");
+            s.className = "ch";
+            s.textContent = ch;
+            s.style.setProperty("--c", counter.i++);
+            wd.appendChild(s);
+          });
+          frag.appendChild(wd);
+        });
+        node.replaceChild(frag, child);
+      } else if (child.nodeType === 1) {
+        wrapChars(child, counter);
+      }
+    });
+  }
+
+  var heroTitle = $("#heroTitle");
+  if (heroTitle) {
+    heroTitle.setAttribute("aria-label", heroTitle.textContent.replace(/\s+/g, " ").trim());
+    $$(".line", heroTitle).forEach(function (line, n) {
+      line.style.setProperty("--n", n);
+      line.setAttribute("aria-hidden", "true");
+      wrapChars(line.firstElementChild, { i: 0 });
+    });
+  }
+
+  // заголовки секций: слова и буквы
+  $$(".section-head__title").forEach(function (el) {
+    var text = el.textContent.trim().replace(/\s+/g, " ");
+    var words = [];
+    Array.prototype.forEach.call(el.childNodes, function (n) {
+      var acc = n.nodeType === 1 && n.tagName === "EM";
+      n.textContent.split(/\s+/).forEach(function (w) { if (w) words.push({ t: w, a: acc }); });
+    });
+    var index = 0;
+    el.setAttribute("aria-label", text);
+    el.textContent = "";
+    words.forEach(function (item, w, arr) {
+      var wordEl = document.createElement("span");
+      wordEl.className = "word" + (item.a ? " word--accent" : "");
+      wordEl.setAttribute("aria-hidden", "true");
+      item.t.split("").forEach(function (ch) {
+        var c = document.createElement("span");
+        c.className = "char";
+        c.textContent = ch;
+        c.style.setProperty("--i", index++);
+        wordEl.appendChild(c);
+      });
+      el.appendChild(wordEl);
+      if (w < arr.length - 1) el.appendChild(document.createTextNode(" "));
+      index += 2;
+    });
+    el.classList.add("split");
+  });
+
+  // абзацы, которые «загораются» при прокрутке
+  var scrubs = $$(".scrub").map(function (el) {
+    var words = el.textContent.trim().split(/\s+/);
+    el.setAttribute("aria-label", words.join(" "));
+    el.textContent = "";
+    var spans = words.map(function (word, i) {
+      var s = document.createElement("span");
+      s.className = "w";
+      s.setAttribute("aria-hidden", "true");
+      s.textContent = word;
+      el.appendChild(s);
+      if (i < words.length - 1) el.appendChild(document.createTextNode(" "));
+      return s;
+    });
+    return { el: el, spans: spans };
+  });
+
+  function updateScrub() {
+    var vh = window.innerHeight;
+    scrubs.forEach(function (s) {
+      var r = s.el.getBoundingClientRect();
+      var p = clamp((vh * 0.9 - r.top) / (vh * 0.42), 0, 1);
+      var n = s.spans.length;
+      for (var i = 0; i < n; i++) {
+        var wp = clamp(p * (n + 4) - i, 0, 1);
+        s.spans[i].style.opacity = (0.18 + 0.82 * wp).toFixed(3);
+      }
+    });
+  }
+
+  /* ---------------------------------------------------------
+     2. Загрузочный экран
+     --------------------------------------------------------- */
+  var loader = $("#loader");
+  var loaderNum = $("#loaderNum");
+  var loaderBar = $("#loaderBar");
+  body.classList.add("is-loading");
+
+  var loadValue = 0;
+  var loadDone = false;
+  var pageLoaded = document.readyState === "complete";
+  window.addEventListener("load", function () { pageLoaded = true; });
+  // страховка: если шрифты или картинки грузятся слишком долго, всё равно запускаем сайт
+  setTimeout(function () { pageLoaded = true; }, 3000);
+
+  var fontsReady = false;
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { fontsReady = true; });
+    setTimeout(function () { fontsReady = true; }, 2500);
+  } else {
+    fontsReady = true;
+  }
+
+  function finishLoading() {
+    if (loadDone) return;
+    loadDone = true;
+    if (loader) loader.classList.add("is-done");
+    setTimeout(function () {
+      body.classList.remove("is-loading");
+      body.classList.add("is-ready");
+    }, 550);
+    setTimeout(function () { if (heroTitle) heroTitle.classList.add("is-settled"); }, 3600);
+    setTimeout(function () { if (loader) loader.style.display = "none"; }, 1500);
+  }
+
+  (function tickLoader() {
+    var target = (pageLoaded && fontsReady) ? 100 : 92;
+    loadValue += (target - loadValue) * 0.08 + 0.4;
+    if (loadValue > target) loadValue = target;
+    var shown = Math.min(100, Math.round(loadValue));
+    if (loaderNum) loaderNum.textContent = shown;
+    if (loaderBar) loaderBar.style.width = shown + "%";
+    if (shown >= 100) setTimeout(finishLoading, 300);
+    else requestAnimationFrame(tickLoader);
+  })();
+
+  /* ---------------------------------------------------------
+     3. Курсор и «линза» на фото (только для мыши)
+     --------------------------------------------------------- */
+  var cursor = $("#cursor");
+  var cursorLabel = $("#cursorLabel");
+  var arch = null; // Portrait uses one stable image, without the animated lens.
+
+  var mouse = { x: -100, y: -100 };
+  var cur = { x: -100, y: -100 };
+  var lens = { x: 0, y: 0, r: 0, tx: 0, ty: 0, tr: 0, ready: false };
+  var refreshCursor = function () {};
+
+  if (finePointer && !reduceMotion) {
+    body.classList.add("has-cursor");
+
+    function applyCursorTarget(t) {
+      if (!t || !t.closest) return;
+      var themeEl = t.closest ? t.closest("[data-theme]") : null;
+      if (themeEl) body.setAttribute("data-cur", themeEl.getAttribute("data-theme"));
+
+      var labelEl = t.closest("[data-cursor]");
+      var linkEl = t.closest("a, button, label, input, textarea");
+      if (labelEl) {
+        cursorLabel.textContent = labelEl.getAttribute("data-cursor");
+        cursor.classList.add("is-label");
+        cursor.classList.remove("is-link");
+      } else {
+        cursor.classList.remove("is-label");
+        cursor.classList.toggle("is-link", !!linkEl);
+      }
+    }
+    refreshCursor = function () { applyCursorTarget(document.elementFromPoint(mouse.x, mouse.y)); };
+
+    window.addEventListener("pointermove", function (e) {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      cursor.classList.add("is-on");
+      applyCursorTarget(e.target);
+    });
+    document.addEventListener("mouseleave", function () { cursor.classList.remove("is-on"); });
+    window.addEventListener("pointerdown", function () { cursor.classList.add("is-down"); });
+    window.addEventListener("pointerup", function () { cursor.classList.remove("is-down"); });
+
+    if (arch) {
+      arch.addEventListener("pointerenter", function () { lens.tr = 150; });
+      arch.addEventListener("pointerleave", function () { lens.tr = 0; });
+      arch.addEventListener("pointermove", function (e) {
+        var r = arch.getBoundingClientRect();
+        lens.tx = e.clientX - r.left;
+        lens.ty = e.clientY - r.top;
+        if (!lens.ready) { lens.x = lens.tx; lens.y = lens.ty; lens.ready = true; }
+      });
+    }
+
+    (function loop() {
+      cur.x += (mouse.x - cur.x) * 0.2;
+      cur.y += (mouse.y - cur.y) * 0.2;
+      cursor.style.transform = "translate(" + cur.x.toFixed(1) + "px," + cur.y.toFixed(1) + "px)";
+
+      if (arch) {
+        lens.x += (lens.tx - lens.x) * 0.18;
+        lens.y += (lens.ty - lens.y) * 0.18;
+        lens.r += (lens.tr - lens.r) * 0.12;
+        arch.style.setProperty("--lx", lens.x.toFixed(1) + "px");
+        arch.style.setProperty("--ly", lens.y.toFixed(1) + "px");
+        arch.style.setProperty("--lr", Math.max(0, lens.r).toFixed(1) + "px");
+      }
+      requestAnimationFrame(loop);
+    })();
+  }
+
+
+  /* ---------------------------------------------------------
+     3b. Буквы заголовка разлетаются от курсора, фото получает глубину
+     --------------------------------------------------------- */
+  if (finePointer && !reduceMotion && hero) {
+    var chars = $$("#heroTitle .ch").map(function (el) { return { el: el, dx: 0, dy: 0, cx: 0, cy: 0 }; });
+    var depth = { x: 0, y: 0, tx: 0, ty: 0 };
+    var heroActive = false;
+    var visualEl = null; // Keep the portrait frame stable.
+
+    hero.addEventListener("pointermove", function (e) {
+      heroActive = true;
+      depth.tx = e.clientX / window.innerWidth - 0.5;
+      depth.ty = e.clientY / window.innerHeight - 0.5;
+    });
+    hero.addEventListener("pointerleave", function () { heroActive = false; depth.tx = 0; depth.ty = 0; });
+
+    (function repelLoop() {
+      depth.x += (depth.tx - depth.x) * 0.07;
+      depth.y += (depth.ty - depth.y) * 0.07;
+      if (visualEl) {
+        visualEl.style.setProperty("--px", depth.x.toFixed(3));
+        visualEl.style.setProperty("--py", depth.y.toFixed(3));
+      }
+
+      if (heroTitle && heroTitle.classList.contains("is-settled")) {
+        var R = 150;
+        chars.forEach(function (c) {
+          var tx = 0, ty = 0, tr = 0;
+          if (heroActive && window.scrollY < window.innerHeight * 0.8) {
+            var r = c.el.getBoundingClientRect();
+            var cx = r.left + r.width / 2 - c.dx;
+            var cy = r.top + r.height / 2 - c.dy;
+            var vx = cx - mouse.x, vy = cy - mouse.y;
+            var d = Math.sqrt(vx * vx + vy * vy);
+            if (d < R && d > 0.5) {
+              var f = Math.pow(1 - d / R, 2) * 46;
+              tx = (vx / d) * f;
+              ty = (vy / d) * f;
+              tr = (vx / d) * f * 0.35;
+            }
+          }
+          c.dx += (tx - c.dx) * 0.2;
+          c.dy += (ty - c.dy) * 0.2;
+          if (Math.abs(c.dx) > 0.05 || Math.abs(c.dy) > 0.05 || tx !== 0 || ty !== 0) {
+            c.el.style.setProperty("--dx", c.dx.toFixed(1) + "px");
+            c.el.style.setProperty("--dy", c.dy.toFixed(1) + "px");
+            c.el.style.setProperty("--dr", (tr).toFixed(1) + "deg");
+          } else {
+            c.el.style.removeProperty("--dx");
+            c.el.style.removeProperty("--dy");
+            c.el.style.removeProperty("--dr");
+          }
+        });
+      }
+      requestAnimationFrame(repelLoop);
+    })();
+  }
+
+  /* ---------------------------------------------------------
+     4. Прокрутка: индикатор, шапка, наезд секций, параллакс, бегущая строка
+     --------------------------------------------------------- */
+  var progress = $("#progress");
+  var marquee = $("#marquee");
+  var track = $("#marqueeTrack");
+  var shifters = $$("[data-hshift]").map(function (el) {
+    return { el: el, section: el.closest("section"), k: parseFloat(el.getAttribute("data-hshift")) };
+  });
+  var speeders = $$("[data-speed]").map(function (el) {
+    return { el: el, k: parseFloat(el.getAttribute("data-speed")) };
+  });
+  var badge = $("#badge");
+
+  var lastY = window.scrollY;
+  var scrollVel = 0;
+  var dir = 1;
+
+  function onScroll() {
+    var y = window.scrollY;
+    var vh = window.innerHeight;
+    var max = document.documentElement.scrollHeight - vh;
+    if (progress) progress.style.transform = "scaleX(" + (max > 0 ? y / max : 0) + ")";
+
+    var delta = y - lastY;
+    if (Math.abs(delta) > 0) dir = delta > 0 ? 1 : -1;
+    scrollVel = delta;
+
+    if (header && !navOpen()) {
+      header.classList.toggle("is-solid", y > 40);
+      header.classList.toggle("is-hidden", delta > 0 && y > 320);
+      if (delta < 0) header.classList.remove("is-hidden");
+    }
+    lastY = y;
+
+    // hero уходит «вглубь», пока секции наезжают
+    if (hero) {
+      if (false) {
+        var p = clamp(y / vh, 0, 1);
+        hero.style.setProperty("--hs", (1 - p * 0.07).toFixed(4));
+        hero.style.setProperty("--dim", (p * 0.7).toFixed(3));
+      } else {
+        hero.style.setProperty("--hs", "1");
+        hero.style.setProperty("--dim", "0");
+      }
+    }
+
+    if (!reduceMotion) {
+      shifters.forEach(function (s) {
+        var top = s.section ? s.section.getBoundingClientRect().top : -y;
+        s.el.style.setProperty("--hx", (top * s.k).toFixed(1) + "px");
+      });
+      speeders.forEach(function (s) { s.el.style.setProperty("--sy", (y * s.k * -1).toFixed(1) + "px"); });
+      if (badge) badge.style.setProperty("--by", (y * -0.06).toFixed(1) + "px");
+    }
+
+    updateScrub();
+    refreshCursor();
+  }
+
+  var ticking = false;
+  window.addEventListener("scroll", function () {
+    if (!ticking) { requestAnimationFrame(function () { onScroll(); ticking = false; }); ticking = true; }
+  }, { passive: true });
+  window.addEventListener("resize", onScroll);
+  onScroll();
+
+  // бегущие строки: скорость и направление зависят от прокрутки
+  var marqueeList = [];
+  if (track) marqueeList.push({ el: track, x: 0, flip: 1, wrap: hero });
+  var track2 = $("#marqueeTrack2");
+  if (track2) marqueeList.push({ el: track2, x: 0, flip: -1, wrap: track2.parentNode });
+
+  var badgeRing = $(".badge__ring");
+  var badgeAngle = 0;
+
+  if (!reduceMotion) {
+    var vel = 0;
+    (function runMarquee() {
+      vel += (Math.min(Math.abs(scrollVel), 60) - vel) * 0.08;
+      scrollVel *= 0.9;
+
+      marqueeList.forEach(function (m) {
+        var r = m.wrap.getBoundingClientRect();
+        if (r.bottom < -50 || r.top > window.innerHeight + 50) return;
+        var setW = m.el.scrollWidth / 4;
+        if (setW <= 0) return;
+        m.x -= (1.1 + vel * 0.55) * dir * m.flip;
+        if (m.x <= -setW) m.x += setW;
+        if (m.x > 0) m.x -= setW;
+        m.el.style.transform = "translate3d(" + m.x.toFixed(1) + "px,0,0)";
+      });
+
+      // бейдж вращается быстрее, когда прокручиваешь страницу
+      if (badgeRing) {
+        badgeAngle += 0.32 + vel * 0.28 * dir;
+        badgeRing.style.transform = "rotate(" + badgeAngle.toFixed(1) + "deg)";
+      }
+      requestAnimationFrame(runMarquee);
+    })();
+  }
+
+  /* ---------------------------------------------------------
+     4b. Машина: заезжает на первый экран и уезжает при прокрутке
+     --------------------------------------------------------- */
+  var car = $("#car");
+  if (car && marquee) {
+    var carPitch = $("#carPitch");
+    var wheels = $$(".wheel__spin", car);
+    var cW = 300, parkX = 0, wheelR = 20, roadH = 120;
+    var carStart = null;
+    var carX = -600, prevX = -600, prevSpeed = 0, pitch = 0;
+    var flashed = false;
+
+    function layoutCar() {
+      var W = hero.clientWidth;
+      cW = car.offsetWidth;
+      roadH = marquee.offsetHeight;
+      car.style.bottom = (roadH - 4) + "px";
+      parkX = W < 700 ? (W - cW) / 2 : W * 0.5 - cW / 2;
+      wheelR = cW * (22 / 340);
+    }
+    layoutCar();
+    window.addEventListener("resize", layoutCar);
+
+    var readyWatch = setInterval(function () {
+      if (body.classList.contains("is-ready")) {
+        clearInterval(readyWatch);
+        carStart = performance.now() + 900;
+      }
+    }, 60);
+
+    var easeOutQuart = function (p) { return 1 - Math.pow(1 - p, 4); };
+
+    function drawCar(x, pitchDeg) {
+      car.style.transform = "translate3d(" + x.toFixed(1) + "px,0,0)";
+      var rot = (x / wheelR) * 57.2958;
+      wheels.forEach(function (w) { w.style.transform = "rotate(" + rot.toFixed(1) + "deg)"; });
+      if (carPitch) carPitch.setAttribute("transform", "rotate(" + pitchDeg.toFixed(2) + " 165 88)");
+    }
+
+    if (reduceMotion) {
+      drawCar(parkX, 0);
+      window.addEventListener("resize", function () { drawCar(parkX, 0); });
+    } else {
+      (function driveLoop(ts) {
+        var startX = -cW - 80;
+        var p = 0;
+        if (carStart !== null) p = clamp((ts - carStart) / 2800, 0, 1);
+        var base = carStart === null ? startX : startX + (parkX - startX) * easeOutQuart(p);
+        var extra = window.scrollY < window.innerHeight * 1.3 ? window.scrollY * 1.6 : window.innerHeight * 2.1;
+        carX = base + extra;
+
+        var speed = carX - prevX;
+        var acc = speed - prevSpeed;
+        pitch += (clamp(-acc * 7, -3, 3) - pitch) * 0.15;
+        prevX = carX;
+        prevSpeed = speed;
+
+        drawCar(carX, pitch);
+
+        var parked = p >= 1 && extra < 2;
+        car.classList.toggle("is-idle", parked);
+        if (p >= 1 && !flashed) {
+          flashed = true;
+          car.classList.add("is-flash");
+          setTimeout(function () { car.classList.remove("is-flash"); }, 1200);
+        }
+        requestAnimationFrame(driveLoop);
+      })(performance.now());
+    }
+  }
+
+  /* ---------------------------------------------------------
+     5. Бургер-меню и активный пункт
+     --------------------------------------------------------- */
+  var burger = $("#burger");
+  var nav = $("#nav");
+
+  function navOpen() { return nav && nav.classList.contains("is-open"); }
+
+  function setNav(open) {
+    if (!burger || !nav) return;
+    burger.classList.toggle("is-open", open);
+    nav.classList.toggle("is-open", open);
+    burger.setAttribute("aria-expanded", open ? "true" : "false");
+    burger.setAttribute("aria-label", open ? "Закрыть меню" : "Открыть меню");
+    body.style.overflow = open ? "hidden" : "";
+    if (open && header) header.classList.remove("is-hidden");
+  }
+
+  if (burger) burger.addEventListener("click", function () { setNav(!navOpen()); });
+  $$(".nav__link").forEach(function (link) { link.addEventListener("click", function () { setNav(false); }); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") setNav(false); });
+  window.addEventListener("resize", function () { if (window.innerWidth > 900) setNav(false); });
+
+  var sections = $$("main section[id]");
+  var links = $$(".nav__link");
+  if ("IntersectionObserver" in window) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        links.forEach(function (l) { l.classList.toggle("is-active", l.getAttribute("href") === "#" + entry.target.id); });
+      });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    sections.forEach(function (s) { spy.observe(s); });
+  }
+
+  /* ---------------------------------------------------------
+     6. Появление блоков и счётчики
+     --------------------------------------------------------- */
+  $$(".cards, .tech-grid").forEach(function (group) {
+    $$(".reveal", group).forEach(function (el, i) { el.style.setProperty("--d", ((i % 4) * 0.12) + "s"); });
+  });
+
+  function counterHTML(el, value) {
+    var prefix = el.getAttribute("data-prefix") || "";
+    var suffix = el.getAttribute("data-suffix") || "";
+    var unit = el.getAttribute("data-unit") || "";
+    return (prefix ? "<span class=\"sfx\">" + prefix + "</span>" : "") + value +
+      (suffix ? "<span class=\"sfx\">" + suffix + "</span>" : "") +
+      (unit ? "<small>" + unit + "</small>" : "");
+  }
+
+  function runCounter(el) {
+    var end = parseFloat(el.getAttribute("data-count"));
+    if (reduceMotion) { el.innerHTML = counterHTML(el, end); return; }
+    var duration = 2000;
+    var start = null;
+    function step(ts) {
+      if (start === null) start = ts;
+      var p = Math.min((ts - start) / duration, 1);
+      var eased = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
+      el.innerHTML = counterHTML(el, Math.round(end * eased));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  $$("[data-count]").forEach(function (el) { el.innerHTML = counterHTML(el, 0); });
+
+  var inTargets = $$(".reveal, .split");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        el.classList.add("is-in");
+        $$("[data-count]", el).forEach(runCounter);
+        io.unobserve(el);
+      });
+    }, { threshold: 0.2, rootMargin: "0px 0px -6% 0px" });
+    inTargets.forEach(function (el) { io.observe(el); });
+  } else {
+    inTargets.forEach(function (el) {
+      el.classList.add("is-in");
+      $$("[data-count]", el).forEach(runCounter);
+    });
+  }
+
+  /* ---------------------------------------------------------
+     7. Карточки и кнопки
+     --------------------------------------------------------- */
+  $$(".more").forEach(function (btn) {
+    var label = $("span", btn);
+    btn.addEventListener("click", function () {
+      var card = btn.closest(".card");
+      var open = card.classList.toggle("is-open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      label.textContent = open ? "Свернуть" : "Подробнее";
+    });
+  });
+
+  if (finePointer && !reduceMotion) {
+    $$(".tilt").forEach(function (card) {
+      card.addEventListener("pointermove", function (e) {
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width;
+        var py = (e.clientY - r.top) / r.height;
+        card.style.setProperty("--ry", ((px - 0.5) * 8).toFixed(2) + "deg");
+        card.style.setProperty("--rx", ((0.5 - py) * 8).toFixed(2) + "deg");
+      });
+      card.addEventListener("pointerleave", function () {
+        card.style.setProperty("--rx", "0deg");
+        card.style.setProperty("--ry", "0deg");
+      });
+    });
+
+    // «магнитные» кнопки
+    $$(".magnetic").forEach(function (btn) {
+      btn.addEventListener("pointermove", function (e) {
+        var r = btn.getBoundingClientRect();
+        var x = (e.clientX - (r.left + r.width / 2)) * 0.22;
+        var y = (e.clientY - (r.top + r.height / 2)) * 0.32;
+        btn.style.translate = x.toFixed(1) + "px " + y.toFixed(1) + "px";
+      });
+      btn.addEventListener("pointerleave", function () { btn.style.translate = "0 0"; });
+    });
+  }
+
+  /* ---------------------------------------------------------
+     8. Форма обратной связи (getform.io)
+     --------------------------------------------------------- */
+  var form = $("#feedbackForm");
+  var statusEl = $("#formStatus");
+  var submitBtn = $("#submitBtn");
+
+  function setError(id, message) {
+    var field = document.getElementById(id).closest(".field");
+    var out = $('.error[data-for="' + id + '"]', field);
+    field.classList.toggle("has-error", !!message);
+    if (out) out.textContent = message || "";
+  }
+
+  function validate() {
+    var ok = true;
+    var name = $("#fName").value.trim();
+    var email = $("#fEmail").value.trim();
+    var msg = $("#fMsg").value.trim();
+
+    if (name.length < 2) { setError("fName", "Введите имя, минимум 2 буквы."); ok = false; } else setError("fName", "");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { setError("fEmail", "Введите корректный email."); ok = false; } else setError("fEmail", "");
+    if (msg.length < 5) { setError("fMsg", "Напишите хотя бы пару слов."); ok = false; } else setError("fMsg", "");
+    return ok;
+  }
+
+  function setStatus(text, type) {
+    statusEl.textContent = text;
+    statusEl.className = "form__status" + (type ? " is-" + type : "");
+  }
+
+  if (form) {
+    ["fName", "fEmail", "fMsg"].forEach(function (id) {
+      document.getElementById(id).addEventListener("input", function () { setError(id, ""); });
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      setStatus("", "");
+      if (!validate()) return;
+
+      if (form.action.startsWith("mailto:")) {
+        window.location.href = form.action + "?subject=" + encodeURIComponent("Вопрос с сайта — " + $("#fName").value.trim()) + "&body=" + encodeURIComponent("Имя: " + $("#fName").value.trim() + "\nEmail: " + $("#fEmail").value.trim() + "\n\n" + $("#fMsg").value.trim() + "\nОценка: " + (new FormData(form).get("rating") || "не указана"));
+        setStatus("Письмо подготовлено. Отправьте его в почтовом приложении. Если оно не открылось, напишите на nixon0293@gmail.com.", "ok");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      setStatus("Отправляю…", "");
+
+      fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" }
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          form.reset();
+          setStatus("Спасибо! Сообщение отправлено, отвечу в ближайшее время.", "ok");
+        })
+        .catch(function () {
+          setStatus("Не удалось отправить. Попробуйте ещё раз или напишите на почту.", "err");
+        })
+        .then(function () { submitBtn.disabled = false; });
+    });
+  }
+
+  /* ---------------------------------------------------------
+     9. Пасхалка в консоли
+     --------------------------------------------------------- */
+  if (window.console && console.log) {
+    console.log("%c Привет! %c Нравится сайт? Давайте подберём вам авто: nixon0293@gmail.com",
+      "background:#FC4F00;color:#0a0a0a;font-weight:700;padding:4px 8px", "color:#FC4F00");
+  }
+})();
+
+
+// ===== форма расчёта стоимости =====
+(function () {
+  var f = document.getElementById("calcForm");
+  if (!f) return;
+  var st = document.getElementById("calcStatus");
+  var btn = document.getElementById("calcBtn");
+  var sum = document.getElementById("calcSummary");
+  function val(id) { return document.getElementById(id).value.trim(); }
+  function err(id, msg) {
+    var field = document.getElementById(id).closest(".field");
+    field.classList.toggle("has-error", !!msg);
+    var out = field.querySelector(".error");
+    if (out) out.textContent = msg || "";
+  }
+  function summary() {
+    var country = f.querySelector('input[name="country"]:checked');
+    var b = val("cBudget").replace(/\D/g, "");
+    var year = document.getElementById("cYear").value;
+    var parts = ["<b>" + (country ? country.value : "") + "</b>"];
+    if (val("cCar")) parts.push(val("cCar").replace(/</g, "&lt;"));
+    if (b) parts.push("до " + b.replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " USD");
+    if (year !== "любой") parts.push(year + "+");
+    sum.innerHTML = parts.join(" · ");
+  }
+  f.addEventListener("input", function (e) { if (e.target.id) err(e.target.id, ""); summary(); });
+  f.addEventListener("change", summary);
+  summary();
+
+  f.addEventListener("submit", function (e) {
+    e.preventDefault();
+    st.textContent = ""; st.className = "form__status";
+    var ok = true;
+    if (val("cCar").length < 2) { err("cCar", "Укажите марку или модель."); ok = false; }
+    if (!/^\d{3,7}$/.test(val("cBudget").replace(/\s/g, ""))) { err("cBudget", "Введите бюджет цифрами."); ok = false; }
+    if (val("cContact").length < 5) { err("cContact", "Оставьте телефон или @telegram."); ok = false; }
+    if (!ok) return;
+    if (f.action.startsWith("mailto:")) {
+      var data = new FormData(f);
+      var labels = {form:"Запрос", country:"Страна", car:"Автомобиль", budget:"Бюджет, USD", year:"Год не старше", contact:"Контакт"};
+      var message = Array.from(data.entries()).map(function (entry) { return (labels[entry[0]] || entry[0]) + ": " + entry[1]; }).join("\n");
+      window.location.href = f.action + "?subject=" + encodeURIComponent("Подбор авто: " + val("cCar")) + "&body=" + encodeURIComponent(message);
+      st.textContent = "Запрос подготовлен. Отправьте письмо в почтовом приложении. Если оно не открылось, напишите на nixon0293@gmail.com.";
+      st.className = "form__status is-ok";
+      return;
+    }
+    btn.disabled = true;
+    st.textContent = "Отправляю…";
+    fetch(f.action, { method: "POST", body: new FormData(f), headers: { Accept: "application/json" } })
+      .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        f.reset(); summary();
+        st.textContent = "Заявка принята! Пришлю варианты и расчёт в ближайшее время.";
+        st.className = "form__status is-ok";
+      })
+      .catch(function () {
+        st.textContent = "Не удалось отправить. Попробуйте ещё раз или напишите на почту.";
+        st.className = "form__status is-err";
+      })
+      .then(function () { btn.disabled = false; });
+  });
+})();
+
+
+// ===== нарисованные машины: едут слева направо, пока секция проходит экран =====
+(function () {
+  var cars = Array.prototype.slice.call(document.querySelectorAll("[data-drive]"));
+  if (!cars.length) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var ticking = false;
+  function update() {
+    ticking = false;
+    var vh = window.innerHeight, vw = window.innerWidth;
+    cars.forEach(function (el) {
+      var sec = el.parentElement.getBoundingClientRect();
+      var p = (vh - sec.top) / (vh + sec.height);
+      p = Math.max(0, Math.min(1, p));
+      var w = el.getBoundingClientRect().width;
+      var from = -w - 40, to = vw + 40;
+      var left = el.classList.contains("drive--contact") ? 0 : 0;
+      var x = from + (to - from) * p;
+      var base = el.offsetLeft;
+      el.style.setProperty("--dx", (x - base) + "px");
+      el.style.setProperty("--wr", (x * 0.6) + "deg");
+    });
+  }
+  function req() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+  window.addEventListener("scroll", req, { passive: true });
+  window.addEventListener("resize", req);
+  update();
+})();
+
+
