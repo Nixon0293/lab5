@@ -42,7 +42,7 @@
           wd.className = "wd";
           part.split("").forEach(function (ch) {
             var s = document.createElement("span");
-            s.className = "ch";
+            s.className = ch.toUpperCase() === "У" ? "ch ch--balanced" : "ch";
             s.textContent = ch;
             s.style.setProperty("--c", counter.i++);
             wd.appendChild(s);
