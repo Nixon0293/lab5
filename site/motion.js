@@ -13,6 +13,11 @@
   }, {rootMargin:'100px'});
   scenes.forEach(scene => observer.observe(scene));
   const clamp = (x,a,b) => Math.max(a, Math.min(b,x));
+  function journeyX(scene, width, position) {
+    const margin = scene.clientWidth * .04;
+    const travel = Math.max(0, scene.clientWidth - width - margin * 2);
+    return margin + travel * clamp(position, 0, 1);
+  }
   function render(dt) {
     clock += dt;
     const bounds = section.getBoundingClientRect();
@@ -26,7 +31,7 @@
       const car = scene.querySelector('.drive-car');
       const width = car.offsetWidth;
       let x = Math.sin(clock*.38)*12;
-      if (index) x = (innerWidth-width)*.5+(progress-.5)*innerWidth*.78;
+      if (index) x = journeyX(scene, width, progress);
       else x -= (scene.clientWidth*.4 + width + 24)*(1-Math.min(clock/2.8,1))**3;
       scene.style.setProperty('--car-x',x.toFixed(2)+'px');
       scene.style.setProperty('--road',(-distance*(index?1.3:1)).toFixed(2)+'px');
@@ -48,7 +53,7 @@
   function staticPose() {
     scenes.forEach((scene,index)=> {
       const width=scene.querySelector('.drive-car').offsetWidth;
-      scene.style.setProperty('--car-x',index?(innerWidth-width)/2+'px':(preference.matches?'0px':-(scene.clientWidth*.4+width+24)*(1-Math.min(clock/2.8,1))**3+'px'));
+      scene.style.setProperty('--car-x',index?journeyX(scene,width,preference.matches?.5:progress)+'px':(preference.matches?'0px':-(scene.clientWidth*.4+width+24)*(1-Math.min(clock/2.8,1))**3+'px'));
     });
   }
   button.addEventListener('click',()=> {
@@ -60,6 +65,6 @@
   });
   preference.addEventListener('change',()=> { staticPose(); start(); });
   document.addEventListener('visibilitychange',start);
-  addEventListener('resize',()=> { if(preference.matches) staticPose(); });
+  addEventListener('resize',()=> { staticPose(); });
   staticPose(); start();
 })();

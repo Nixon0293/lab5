@@ -98,7 +98,7 @@ body.motion-paused *,body.motion-paused *::before,body.motion-paused *::after { 
  .journey-heading h2 { font-size:15vw; }
  .journey-heading p { max-width:260px; }
  .drive-scene--journey { height:250px; bottom:16%; }
- .drive-scene--journey .drive-car { width:115vw; }
+ .drive-scene--journey .drive-car { width:90vw; }
  .journey-bottom { gap:10px; font-size:7px; }
  .roadshow { height:150vh; }
  .contact__mail { font-size:clamp(16px,5.3vw,32px); }
