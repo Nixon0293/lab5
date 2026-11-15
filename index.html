@@ -1,48 +1,33 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мои достижения — Дмитрий Некрашевич</title>
+    <title>Advanced Positioning Task</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <main>
-        <section class="achievements">
-            <div class="section-content">
-                <p class="label">Обо мне</p>
-                <h1>Мои достижения</h1>
-                <p class="intro">Я Дмитрий Некрашевич. Мне интересны продажи, работа с клиентами и организация бизнес-процессов.</p>
+    <!-- Обычное положение блоков -->
+    <div class="box-static">Static</div>
+    <div class="box-static">Static</div>
 
-                <div class="cards">
-                    <article class="card">
-                        <div class="icon" aria-hidden="true">🤝</div>
-                        <div class="card-text">
-                            <h2>Работа с клиентами</h2>
-                            <p>Стараюсь внимательно понимать запрос клиента и предлагать подходящее решение.</p>
-                        </div>
-                    </article>
+    <!-- Смещение относительно обычного положения -->
+    <div class="box-relative-1">Relative 1</div>
+    <div class="box-relative-2">Relative 2</div>
 
-                    <article class="card">
-                        <div class="icon" aria-hidden="true">📈</div>
-                        <div class="card-text">
-                            <h2>Интерес к продажам</h2>
-                            <p>Изучаю, как выстраивать диалог, рассказывать о продукте и помогать с выбором.</p>
-                        </div>
-                    </article>
+    <!-- Положение относительно контейнера -->
+    <div class="container">
+        <div class="box-absolute-1">Absolute 1</div>
+        <div class="box-absolute-2">Absolute 2</div>
+        <div class="box-absolute-3">Absolute 3</div>
+    </div>
 
-                    <article class="card">
-                        <div class="icon" aria-hidden="true">✓</div>
-                        <div class="card-text">
-                            <h2>Организация работы</h2>
-                            <p>Ценю порядок в задачах, планирование и внимание к деталям в ежедневной работе.</p>
-                        </div>
-                    </article>
-                </div>
+    <!-- Перекрытие: блок с большим z-index находится сверху -->
+    <div class="box-zindex-1">Z-Index 5</div>
+    <div class="box-zindex-2">Z-Index 4</div>
 
-                <a class="contact" href="mailto:nixon0293@gmail.com">Связаться со мной</a>
-            </div>
-        </section>
-    </main>
+    <!-- Положение относительно окна браузера -->
+    <div class="box-fixed-1">Fixed Top-Right</div>
+    <div class="box-fixed-2">Fixed Bottom-Left</div>
 </body>
 </html>
