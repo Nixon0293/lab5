@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="motion.css?v=20261115-3">
-</head>
+<link rel="stylesheet" href="studio.css?v=20261116"></head>
 <body>
   <a class="skip-link" href="#home">К содержимому</a>
 
@@ -312,15 +312,15 @@
 
         <div class="gallery">
           <figure class="shot shot--tall reveal" data-cursor="Авто">
-            <div class="shot__frame"><img src="img/gallery-bmw.jpg" alt="Реальная фотография BMW M4 на дороге" loading="lazy" width="488" height="627"></div>
+            <a class="shot__frame" href="catalog.html" aria-label="Смотреть каталог автомобилей"><img src="img/gallery-bmw.jpg" alt="Реальная фотография BMW M4 на дороге" loading="lazy" width="488" height="627"></a>
             <figcaption><i>01</i> Подбор <em>под вас</em></figcaption>
           </figure>
           <figure class="shot shot--wide reveal" data-cursor="Авто">
-            <div class="shot__frame"><img src="img/gallery-porsche.jpg" alt="Реальная фотография чёрного Porsche 911 в городе" loading="lazy" width="864" height="570"></div>
+            <a class="shot__frame" href="catalog.html" aria-label="Смотреть каталог автомобилей"><img src="img/gallery-porsche.jpg" alt="Реальная фотография чёрного Porsche 911 в городе" loading="lazy" width="864" height="570"></a>
             <figcaption><i>02</i> Проверка <em>до покупки</em></figcaption>
           </figure>
           <figure class="shot shot--mid reveal" data-cursor="Авто">
-            <div class="shot__frame"><img src="img/gallery-road.jpg" alt="Реальная фотография белого Porsche 911 на загородной дороге" loading="lazy" width="780" height="981"></div>
+            <a class="shot__frame" href="catalog.html" aria-label="Смотреть каталог автомобилей"><img src="img/gallery-road.jpg" alt="Реальная фотография белого Porsche 911 на загородной дороге" loading="lazy" width="780" height="981"></a>
             <figcaption><i>03</i> Доставка <em>без хлопот</em></figcaption>
           </figure>
         </div>
@@ -333,7 +333,7 @@
       <div class="roadshow__sticky">
         <div class="journey-heading"><span class="section-head__num">Движение к вашей цели</span><h2>Ближе с каждым<br><em>километром.</em></h2><p>Подбор. Проверка. Доставка. Ваш автомобиль в надёжных руках.</p></div>
         <div class="drive-scene drive-scene--journey" aria-hidden="true"><div class="drive-scene__haze"></div><div class="drive-scene__horizon"></div><div class="drive-scene__road"></div><div class="drive-car"><div class="drive-car__shadow"></div><div class="drive-car__body"><img src="img/drive-coupe.webp" alt="" width="1536" height="512"><span class="drive-wheel drive-wheel--rear"></span><span class="drive-wheel drive-wheel--front"></span><span class="drive-car__tail"></span><span class="drive-car__beam"></span></div></div></div>
-        <div class="journey-bottom"><span>ОТ ЗАПРОСА</span><div class="journey-progress"><i></i></div><span>ДО ВАШЕГО ГАРАЖА ↗</span></div>
+        <div class="journey-stages" aria-label="Этапы привоза"><div class="journey-stage is-current"><span>01</span>Подбор</div><div class="journey-stage"><span>02</span>Проверка</div><div class="journey-stage"><span>03</span>Доставка</div><div class="journey-stage"><span>04</span>Ваши ключи</div></div><div class="journey-distance" aria-hidden="true"><b>00%</b>ВАШ МАРШРУТ</div><div class="journey-bottom"><span>ОТ ЗАПРОСА</span><div class="journey-progress"><i></i></div><span>ДО ВАШЕГО ГАРАЖА ↗</span></div>
       </div>
     </section>
 
@@ -479,8 +479,8 @@
     <a href="#home" class="footer__up"><span class="roll">Наверх ↑</span></a>
   </footer>
 
-  <script src="script.js?v=20261115-2"></script>
+  <script src="script.js?v=20261116"></script>
   <script src="motion.js"></script>
   <script src="effects.js"></script>
-</body>
+<script src="studio.js?v=20261116"></script></body>
 </html>
