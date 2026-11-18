@@ -17,6 +17,8 @@
   const picker = document.querySelector('.brand-picker');
   const brands = [...picker.querySelectorAll('button')];
   const dialog = document.querySelector('.model-dialog');
+  const modelMedia = dialog.querySelector('.model-media');
+  const photo = modelMedia.querySelector('.model-photo');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const aliases = { BMW:'бмв', Audi:'ауди', HAVAL:'хавал', BELGEE:'белджи', Geely:'джили' };
   const normalize = value => value.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
@@ -94,8 +96,10 @@
     });
     details.hidden = false;
     details.addEventListener('click', () => {
-      const photo = dialog.querySelector('.model-photo');
-      photo.src = card.querySelector('img').src;
+      const source = card.querySelector('.vehicle-media');
+      modelMedia.className = source.className + ' model-media';
+      modelMedia.dataset.model = card.dataset.id;
+      photo.src = source.querySelector('img').src;
       photo.alt = card.dataset.name;
       dialog.querySelector('#modelTitle').textContent = card.dataset.name;
       dialog.querySelector('.vehicle-kicker').textContent = card.querySelector('.vehicle-kicker').textContent;
@@ -105,6 +109,14 @@
       dialog.showModal();
       dialog.addEventListener('close', () => details.focus({ preventScroll:true }), { once:true });
     });
+    card.querySelector('.vehicle-media img').addEventListener('click', () => details.click());
+  });
+
+  dialog.addEventListener('click', event => {
+    if (event.target !== dialog) return;
+    const bounds = dialog.getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX > bounds.right ||
+        event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
   });
 
   picker.hidden = false;

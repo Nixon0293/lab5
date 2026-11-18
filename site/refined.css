@@ -366,3 +366,142 @@ body {
   transition: opacity .55s ease;
 }
 .is-ready .hero__actions { transition-delay: .25s; }
+
+/* The reveal rotates the letter on its own transform, while the optical
+   correction uses scale and the same origin as the opening headline. */
+.js .split .char.type-u { transform-origin: 50% .16em; }
+
+.catalog-section { padding-top: 12px; }
+.catalog-intro .catalog-feature { border-radius: 24px; overflow: hidden; }
+.catalog-jump { border-bottom: 1px solid #ff98687a; padding-bottom: 4px; }
+.vehicle-grid { align-items: stretch; }
+.vehicle {
+  isolation: isolate;
+  background: linear-gradient(155deg, #29252a, #1d1a1e 66%);
+  border-color: #ffffff21;
+}
+.vehicle-media {
+  aspect-ratio: 1.65;
+  background: radial-gradient(ellipse at 50% 62%, #54474a, #29242a 72%);
+}
+.vehicle-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  object-fit: cover;
+  object-position: var(--photo-position, center center);
+}
+.vehicle-media--cutout img { object-fit: contain; padding: 16px 10px 4px; }
+.vehicle-media--studio img { object-fit: contain; padding: 0; }
+.vehicle:is([data-id="audi-q5"],[data-id="audi-q7"]), .model-media:is([data-model="audi-q5"],[data-model="audi-q7"]) { --photo-position: center 53%; }
+.vehicle[data-id="bmw-x5"],.model-media[data-model="bmw-x5"] { --photo-position: center 44%; }
+.vehicle-media img::selection { background: transparent; }
+.vehicle .vehicle-media img { cursor: zoom-in; }
+.vehicle:hover .vehicle-media img { transform: scale(1.045); }
+.vehicle h2 { margin-block: 5px 13px; }
+.vehicle-budget { position: relative; padding-top: 14px; }
+.vehicle-budget::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 45px;
+  height: 1px;
+  background: #ff8d6a;
+  transition: width .5s var(--motion-out);
+}
+.vehicle:hover .vehicle-budget::before { width: 80px; }
+.vehicle-actions { display: grid; grid-template-columns: minmax(0,1.5fr) minmax(0,1fr); }
+.vehicle-actions > * { padding-inline: 7px; text-align: center; }
+.vehicle-actions .action-button { min-height: 45px; }
+.vehicle-details:hover { border-color: #ffab8b75; }
+
+.model-dialog {
+  width: min(1040px, 100% - 32px);
+  border-radius: 23px;
+  padding: 0;
+  background: #221e23;
+  box-shadow: 0 30px 100px #000a;
+}
+.model-dialog[open] { grid-template-columns: minmax(0,1.38fr) minmax(0,1fr); align-items: stretch; }
+.model-dialog > form { position: absolute; inset: 0 0 auto auto; z-index: 2; }
+.model-close { transition: background .25s, rotate .35s var(--motion-out); }
+.model-close:hover { background: #3f302d; rotate: 12deg; }
+.model-media {
+  margin: 0;
+  display: grid;
+  align-content: center;
+  align-self: stretch;
+  height: 100%;
+  min-height: 100%;
+  aspect-ratio: auto;
+  border-right: 1px solid var(--edge);
+}
+.model-media .model-photo {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1.65;
+  min-height: 0;
+  max-height: none;
+  background: transparent;
+}
+.model-media figcaption {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: #17141be8;
+  font-size: 10px;
+  color: #e9dbd2;
+}
+.model-info { display: grid; align-content: center; padding: 32px clamp(22px,4vw,48px); }
+.model-info .action-button { width: fit-content; min-height: 46px; }
+.model-dialog[open] .model-info { animation: model-copy-in .65s var(--motion-out) both; }
+.model-dialog[open]::backdrop { animation: model-backdrop-in .32s ease both; }
+@keyframes model-copy-in { from { opacity: .2; translate: 0 12px; } to { opacity: 1; translate: 0 0; } }
+@keyframes model-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@media(max-width:720px) {
+  .model-dialog[open] { display: block; }
+  .model-media { height: auto; min-height: 0; border-right: 0; border-bottom: 1px solid var(--edge); }
+  .model-media .model-photo { max-height: 36dvh; }
+  .model-info { padding: 20px; }
+  .model-info .action-button { width: 100%; justify-content: center; }
+}
+@media(prefers-reduced-motion:reduce){
+  .model-dialog[open] .model-info,.model-dialog[open]::backdrop { animation: none !important; }
+}
+/* A clipping boundary should not become a scroll container for the sticky scene. */
+body { overflow-x: clip; }
+@media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
+  .roadshow { height: 175vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .journey-distance, .journey-progress { visibility: hidden; }
+}
+.vehicle[data-id="geely-ex2"] .vehicle-media img,
+.model-media[data-model="geely-ex2"] img { scale: 1.12; }
+.gallery {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 27px);
+}
+.gallery .shot { grid-column: auto; grid-row: auto; height: auto; }
+.gallery .shot .shot__frame { height: auto; aspect-ratio: 1.45; }
+.js .gallery .shot.reveal.is-in .shot__frame img { transform: scale(1.02); }
+.js .gallery .shot.reveal.is-in:hover .shot__frame img { transform: scale(1.085); }
+.gallery .shot:nth-child(2) { --d: .08s; }
+.gallery .shot:nth-child(3) { --d: .16s; }
+@media (max-width:720px) {
+  .gallery { grid-template-columns: 1fr; }
+}
+@media (max-width:900px) and (prefers-reduced-motion:no-preference) {
+  .journey-distance { display: block; bottom: 20%; top: auto; font-size: 0; }
+  .journey-distance b { font: 500 22px/1 var(--display); margin: 0; }
+}
+.gallery-accent { display: inline-block; white-space: nowrap; }
+.vehicle-media--studio img {
+  mix-blend-mode: screen;
+  scale: 1.32;
+  translate: -3% 0;
+}

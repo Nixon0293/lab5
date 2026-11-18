@@ -108,28 +108,6 @@
       ready.observe(document.body,{attributes:true,attributeFilter:['class']});
     }
   }
-  const stages = [...document.querySelectorAll('.journey-stage')];
-  const section = document.querySelector('#roadshow');
-  const distance = document.querySelector('.journey-distance b');
-  let scheduled = false;
-  function updateJourney() {
-    scheduled = false;
-    if (!section) return;
-    const bounds = section.getBoundingClientRect();
-    const progress = Math.max(0,Math.min(1,-bounds.top/Math.max(1,bounds.height-innerHeight)));
-    const current = Math.min(3,Math.floor(progress*4));
-    stages.forEach((stage,index) => {
-      stage.classList.toggle('is-current',index===current);
-      stage.classList.toggle('is-complete',index<current);
-      if(index===current) stage.setAttribute('aria-current','step');
-      else stage.removeAttribute('aria-current');
-    });
-    if(distance) distance.textContent=String(Math.round(progress*100)).padStart(2,'0')+'%';
-  }
-  function schedule() { if(!scheduled) { scheduled=true; requestAnimationFrame(updateJourney); } }
-  addEventListener('scroll',schedule,{passive:true});
-  addEventListener('resize',schedule);
-  updateJourney();
   preference.addEventListener('change',() => { if(preference.matches) animations.forEach(animation=>animation.finish()); });
   const toggle = document.querySelector('.motion-toggle');
   if(toggle) toggle.addEventListener('click',() => {

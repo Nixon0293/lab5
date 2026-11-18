@@ -77,19 +77,34 @@
     var index = 0;
     el.setAttribute("aria-label", text);
     el.textContent = "";
+    var keepAccentTogether = el.closest("#cars");
+    var accentGroup;
     words.forEach(function (item, w, arr) {
       var wordEl = document.createElement("span");
       wordEl.className = "word" + (item.a ? " word--accent" : "");
       wordEl.setAttribute("aria-hidden", "true");
       item.t.split("").forEach(function (ch) {
         var c = document.createElement("span");
-        c.className = "char";
+        c.className = ch.toUpperCase() === "У" ? "char type-u" : "char";
         c.textContent = ch;
         c.style.setProperty("--i", index++);
         wordEl.appendChild(c);
       });
-      el.appendChild(wordEl);
-      if (w < arr.length - 1) el.appendChild(document.createTextNode(" "));
+      var container = el;
+      if (keepAccentTogether && item.a) {
+        if (!accentGroup) {
+          accentGroup = document.createElement("span");
+          accentGroup.className = "gallery-accent";
+          el.appendChild(accentGroup);
+        }
+        container = accentGroup;
+      } else {
+        accentGroup = null;
+      }
+      container.appendChild(wordEl);
+      if (w < arr.length - 1) {
+        (accentGroup && arr[w + 1].a ? accentGroup : el).appendChild(document.createTextNode(" "));
+      }
       index += 2;
     });
     el.classList.add("split");
