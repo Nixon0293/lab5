@@ -25,7 +25,7 @@
  form.addEventListener('submit',e=>{e.preventDefault();calculate();if(!form.checkValidity())form.reportValidity();});
  form.addEventListener('input',e=>{
   if(e.target.id==='made'||e.target.id==='importDate')setRecycling();
-  if(e.target.id==='importDate'){q('eurRate').value='';q('usdRate').value='';rateDate='';usdDate='';q('usdRateStatus').textContent='Введите курс USD на выбранную дату или получите его из НБРБ.';q('rateStatus').textContent='Получите курс на выбранную дату или введите его вручную.';}
+  if(e.target.id==='importDate'){form.querySelector('.customs-advanced').open=true;q('eurRate').value='';q('usdRate').value='';rateDate='';usdDate='';q('usdRateStatus').textContent='Введите курс USD на выбранную дату или получите его из НБРБ.';q('rateStatus').textContent='Получите курс на выбранную дату или введите его вручную.';}
   if(e.target.id==='usdRate'){usdDate=q('importDate').value;q('usdRateStatus').textContent='Ручной ввод · 1 USD = '+q('usdRate').value+' BYN';}
   if(e.target.id==='eurRate'){rateSource='Ручной ввод';rateDate=q('importDate').value;q('rateStatus').textContent='Ручной ввод · 1 EUR = '+q('eurRate').value+' BYN';}
   calculate();

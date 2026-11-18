@@ -11,20 +11,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261118">
+  <link rel="stylesheet" href="style.css?v=20261118-2">
   <link rel="stylesheet" href="motion.css?v=20261115-3">
 <link rel="stylesheet" href="studio.css?v=20261116">
-<link rel="stylesheet" href="refined.css?v=20261118-2">
+<link rel="stylesheet" href="refined.css?v=20261118-3">
 </head>
 <body>
   <a class="skip-link" href="#home">К содержимому</a>
-
-  <!-- Загрузочный экран -->
-  <div class="loader" id="loader" aria-hidden="true">
-    <div class="loader__top"><span>Дмитрий Некрашевич</span><span>Sales Manager</span></div>
-    <div class="loader__num"><span id="loaderNum">0</span><small>%</small></div>
-    <div class="loader__bar"><i id="loaderBar"></i></div>
-  </div>
 
   <!-- Курсор и индикатор прокрутки -->
   <div class="progress" id="progress" aria-hidden="true"></div>
@@ -358,56 +351,22 @@
           <p class="section-head__lead scrub">Скажите, какое авто хотите и на какой бюджет рассчитываете. Пришлю варианты и итоговую цену с доставкой и оформлением.</p>
         </header>
 
-        <!-- Замени EMAIL_DRAFT на идентификатор формы из getform.io -->
-        <form class="calc__form reveal" id="calcForm" action="mailto:nixon0293@gmail.com" method="POST" novalidate>
-          <input type="hidden" name="form" value="Расчёт стоимости">
-          <fieldset class="field">
-            <legend>Откуда привезти</legend>
-            <div class="chips">
-              <input type="radio" id="cChina" name="country" value="Китай" checked><label for="cChina">Китай</label>
-              <input type="radio" id="cKorea" name="country" value="Корея"><label for="cKorea">Корея</label>
-              <input type="radio" id="cEurope" name="country" value="Европа"><label for="cEurope">Европа</label>
-              <input type="radio" id="cUsa" name="country" value="США"><label for="cUsa">США</label>
-            </div>
-          </fieldset>
-
-          <div class="calc__row">
+        <form class="calc__form request-form reveal" id="calcForm" action="mailto:nixon0293@gmail.com" method="POST">
+          <div class="request-fields">
             <div class="field">
               <label for="cCar">Марка и модель</label>
-              <input type="text" id="cCar" name="car" placeholder="Например, Geely Monjaro" required>
-              <span class="error" data-for="cCar"></span>
+              <input id="cCar" name="car" placeholder="Например, BMW X3" autocomplete="off" required minlength="2" maxlength="100">
             </div>
             <div class="field">
-              <label for="cBudget">Бюджет, USD</label>
-              <input type="text" id="cBudget" name="budget" inputmode="numeric" placeholder="25000" required>
-              <span class="error" data-for="cBudget"></span>
-            </div>
-            <div class="field">
-              <label for="cYear">Год не старше</label>
-              <select id="cYear" name="year">
-                <option value="любой">Любой</option>
-                <option value="2026">2026</option>
-                <option value="2025">2025</option>
-                <option value="2024">2024</option>
-                <option value="2022">2022</option>
-                <option value="2020">2020</option>
-                <option value="2018">2018</option>
-              </select>
+              <label for="cBudget">Бюджет, USD <small>необязательно</small></label>
+              <input id="cBudget" name="budget" inputmode="numeric" type="number" min="1" max="1000000" step="1" placeholder="Например, 45 000">
             </div>
           </div>
-
-          <div class="field">
-            <label for="cContact">Как с вами связаться</label>
-            <input type="text" id="cContact" name="contact" placeholder="Телефон или @telegram" required>
-            <span class="error" data-for="cContact"></span>
+          <div class="request-actions">
+            <button type="submit" class="btn btn--primary">Подготовить письмо <span aria-hidden="true">↗</span></button>
+            <a href="https://t.me/dmittrixx" class="request-telegram">Написать в Telegram <span aria-hidden="true">↗</span></a>
           </div>
-
-          <div class="calc__foot">
-            <p class="calc__summary" id="calcSummary" aria-live="polite"></p>
-            <button type="submit" class="btn btn--primary magnetic" id="calcBtn"><span class="roll">Подготовить запрос</span><b class="btn__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></b></button>
-          </div>
-          <p class="form-note">Запрос откроется в вашей почте. Проверьте письмо и отправьте его Дмитрию.</p>
-          <p class="form__status" id="calcStatus" role="status" aria-live="polite"></p>
+          <p class="form-note">Кнопка откроет черновик в вашей почте.</p>
         </form>
       </div>
     </section>
@@ -416,64 +375,21 @@
     <section class="contact" id="contact" data-theme="dark">
       <div class="contact__container">
         <header class="section-head">
-          <span class="section-head__num">06 — Связь</span>
+          <span class="section-head__num">Минск, Беларусь</span>
           <h2 class="section-head__title">Давайте обсудим вашу <em>задачу</em></h2>
           <p class="section-head__lead scrub">Напишите, какое авто ищете и какой у вас бюджет. Отвечу и предложу варианты.</p>
         </header>
 
-        <a class="contact__mail" href="mailto:nixon0293@gmail.com"><span class="roll">nixon0293@gmail.com</span></a>
-
-        <div class="contact__grid">
-          <ul class="contact__list reveal">
-            <li>
-              <span class="label">Телефон</span>
-              <a href="tel:+375291138597">+375 (29) 113-85-97</a>
-            </li>
-            <li>
-              <span class="label">Почта</span>
-              <a href="mailto:nixon0293@gmail.com">nixon0293@gmail.com</a>
-            </li>
-            <li>
-              <span class="label">Telegram</span>
-              <a href="https://t.me/dmittrixx">@dmittrixx</a>
-            </li>
-            <li>
-              <span class="label">Город</span>
-              <span class="value">Минск, Беларусь</span>
-            </li>
-          </ul>
-
-          <!-- Замени EMAIL_DRAFT на идентификатор формы из getform.io -->
-          <form class="form reveal" id="feedbackForm" action="mailto:nixon0293@gmail.com" method="POST" novalidate>
-            <div class="field">
-              <label for="fName">Ваше имя</label>
-              <input type="text" id="fName" name="name" placeholder="Как к вам обращаться" required autocomplete="name">
-              <span class="error" data-for="fName"></span>
-            </div>
-            <div class="field">
-              <label for="fEmail">Email</label>
-              <input type="email" id="fEmail" name="email" placeholder="name@example.com" required autocomplete="email">
-              <span class="error" data-for="fEmail"></span>
-            </div>
-            <div class="field">
-              <label for="fMsg">Сообщение или отзыв</label>
-              <textarea id="fMsg" name="message" rows="3" placeholder="Какое авто нужно или что понравилось на сайте" required></textarea>
-              <span class="error" data-for="fMsg"></span>
-            </div>
-            <fieldset class="field rating">
-              <legend>Оценка сайта</legend>
-              <div class="stars">
-                <input type="radio" id="s5" name="rating" value="5"><label for="s5" title="5">★</label>
-                <input type="radio" id="s4" name="rating" value="4"><label for="s4" title="4">★</label>
-                <input type="radio" id="s3" name="rating" value="3"><label for="s3" title="3">★</label>
-                <input type="radio" id="s2" name="rating" value="2"><label for="s2" title="2">★</label>
-                <input type="radio" id="s1" name="rating" value="1"><label for="s1" title="1">★</label>
-              </div>
-            </fieldset>
-            <button type="submit" class="btn btn--primary magnetic" id="submitBtn"><span class="roll">Подготовить письмо</span><b class="btn__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></b></button>
-            <p class="form-note">Откроется почтовое приложение с готовым письмом.</p>
-            <p class="form__status" id="formStatus" role="status" aria-live="polite"></p>
-          </form>
+        <div class="contact-links">
+          <a class="contact-link reveal" href="https://t.me/dmittrixx">
+            <span>Telegram</span><strong>@dmittrixx</strong><b aria-hidden="true">↗</b>
+          </a>
+          <a class="contact-link reveal" href="mailto:nixon0293@gmail.com">
+            <span>Почта</span><strong>nixon0293@gmail.com</strong><b aria-hidden="true">↗</b>
+          </a>
+          <a class="contact-link reveal" href="tel:+375291138597">
+            <span>Телефон</span><strong>+375 (29) 113-85-97</strong><b aria-hidden="true">↗</b>
+          </a>
         </div>
       </div>
 
@@ -495,8 +411,8 @@
     <a href="#home" class="footer__up"><span class="roll">Наверх ↑</span></a>
   </footer>
 
-  <script src="script.js?v=20261118"></script>
+  <script src="script.js?v=20261118-2"></script>
   <script src="motion.js?v=20261118"></script>
-  <script src="effects.js?v=20261118"></script>
-<script src="studio.js?v=20261116"></script><script src="navigation.js?v=20261118"></script></body>
+  <script src="effects.js?v=20261118-2"></script>
+<script src="studio.js?v=20261118"></script><script src="navigation.js?v=20261118"></script></body>
 </html>

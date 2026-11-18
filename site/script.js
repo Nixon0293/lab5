@@ -125,51 +125,12 @@
     });
   }
 
-  /* ---------------------------------------------------------
-     2. Загрузочный экран
-     --------------------------------------------------------- */
-  var loader = $("#loader");
-  var loaderNum = $("#loaderNum");
-  var loaderBar = $("#loaderBar");
-  body.classList.add("is-loading");
-
-  var loadValue = 0;
-  var loadDone = false;
-  var pageLoaded = document.readyState === "complete";
-  window.addEventListener("load", function () { pageLoaded = true; });
-  // страховка: если шрифты или картинки грузятся слишком долго, всё равно запускаем сайт
-  setTimeout(function () { pageLoaded = true; }, 3000);
-
-  var fontsReady = false;
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function () { fontsReady = true; });
-    setTimeout(function () { fontsReady = true; }, 2500);
-  } else {
-    fontsReady = true;
-  }
-
-  function finishLoading() {
-    if (loadDone) return;
-    loadDone = true;
-    if (loader) loader.classList.add("is-done");
+  requestAnimationFrame(function () {
+    body.classList.add("is-ready");
     setTimeout(function () {
-      body.classList.remove("is-loading");
-      body.classList.add("is-ready");
-    }, 550);
-    setTimeout(function () { if (heroTitle) heroTitle.classList.add("is-settled"); }, 3600);
-    setTimeout(function () { if (loader) loader.style.display = "none"; }, 1500);
-  }
-
-  (function tickLoader() {
-    var target = (pageLoaded && fontsReady) ? 100 : 92;
-    loadValue += (target - loadValue) * 0.08 + 0.4;
-    if (loadValue > target) loadValue = target;
-    var shown = Math.min(100, Math.round(loadValue));
-    if (loaderNum) loaderNum.textContent = shown;
-    if (loaderBar) loaderBar.style.width = shown + "%";
-    if (shown >= 100) setTimeout(finishLoading, 300);
-    else requestAnimationFrame(tickLoader);
-  })();
+      if (heroTitle) heroTitle.classList.add("is-settled");
+    }, 1900);
+  });
 
   /* ---------------------------------------------------------
      4. Прокрутка: индикатор, шапка, наезд секций, параллакс, бегущая строка
@@ -451,145 +412,31 @@
     });
   }
 
-  /* ---------------------------------------------------------
-     8. Форма обратной связи (getform.io)
-     --------------------------------------------------------- */
-  var form = $("#feedbackForm");
-  var statusEl = $("#formStatus");
-  var submitBtn = $("#submitBtn");
-
-  function setError(id, message) {
-    var field = document.getElementById(id).closest(".field");
-    var out = $('.error[data-for="' + id + '"]', field);
-    field.classList.toggle("has-error", !!message);
-    if (out) out.textContent = message || "";
-  }
-
-  function validate() {
-    var ok = true;
-    var name = $("#fName").value.trim();
-    var email = $("#fEmail").value.trim();
-    var msg = $("#fMsg").value.trim();
-
-    if (name.length < 2) { setError("fName", "Введите имя, минимум 2 буквы."); ok = false; } else setError("fName", "");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { setError("fEmail", "Введите корректный email."); ok = false; } else setError("fEmail", "");
-    if (msg.length < 5) { setError("fMsg", "Напишите хотя бы пару слов."); ok = false; } else setError("fMsg", "");
-    return ok;
-  }
-
-  function setStatus(text, type) {
-    statusEl.textContent = text;
-    statusEl.className = "form__status" + (type ? " is-" + type : "");
-  }
-
-  if (form) {
-    ["fName", "fEmail", "fMsg"].forEach(function (id) {
-      document.getElementById(id).addEventListener("input", function () { setError(id, ""); });
-    });
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      setStatus("", "");
-      if (!validate()) return;
-
-      if (form.action.startsWith("mailto:")) {
-        window.location.href = form.action + "?subject=" + encodeURIComponent("Вопрос с сайта — " + $("#fName").value.trim()) + "&body=" + encodeURIComponent("Имя: " + $("#fName").value.trim() + "\nEmail: " + $("#fEmail").value.trim() + "\n\n" + $("#fMsg").value.trim() + "\nОценка: " + (new FormData(form).get("rating") || "не указана"));
-        setStatus("Письмо подготовлено. Отправьте его в почтовом приложении. Если оно не открылось, напишите на nixon0293@gmail.com.", "ok");
-        return;
-      }
-
-      submitBtn.disabled = true;
-      setStatus("Отправляю…", "");
-
-      fetch(form.action, {
-        method: "POST",
-        body: new FormData(form),
-        headers: { Accept: "application/json" }
-      })
-        .then(function (res) {
-          if (!res.ok) throw new Error("HTTP " + res.status);
-          form.reset();
-          setStatus("Спасибо! Сообщение отправлено, отвечу в ближайшее время.", "ok");
-        })
-        .catch(function () {
-          setStatus("Не удалось отправить. Попробуйте ещё раз или напишите на почту.", "err");
-        })
-        .then(function () { submitBtn.disabled = false; });
-    });
-  }
-
-  /* ---------------------------------------------------------
-     9. Пасхалка в консоли
-     --------------------------------------------------------- */
-  if (window.console && console.log) {
-    console.log("%c Привет! %c Нравится сайт? Давайте подберём вам авто: nixon0293@gmail.com",
-      "background:#FC4F00;color:#0a0a0a;font-weight:700;padding:4px 8px", "color:#FC4F00");
-  }
 })();
 
-
-// ===== форма расчёта стоимости =====
 (function () {
-  var f = document.getElementById("calcForm");
-  if (!f) return;
-  var st = document.getElementById("calcStatus");
-  var btn = document.getElementById("calcBtn");
-  var sum = document.getElementById("calcSummary");
-  function val(id) { return document.getElementById(id).value.trim(); }
-  function err(id, msg) {
-    var field = document.getElementById(id).closest(".field");
-    field.classList.toggle("has-error", !!msg);
-    var out = field.querySelector(".error");
-    if (out) out.textContent = msg || "";
-  }
-  function summary() {
-    var country = f.querySelector('input[name="country"]:checked');
-    var b = val("cBudget").replace(/\D/g, "");
-    var year = document.getElementById("cYear").value;
-    var parts = ["<b>" + (country ? country.value : "") + "</b>"];
-    if (val("cCar")) parts.push(val("cCar").replace(/</g, "&lt;"));
-    if (b) parts.push("до " + b.replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " USD");
-    if (year !== "любой") parts.push(year + "+");
-    sum.innerHTML = parts.join(" · ");
-  }
-  f.addEventListener("input", function (e) { if (e.target.id) err(e.target.id, ""); summary(); });
-  f.addEventListener("change", summary);
-  summary();
+  const request = document.getElementById('calcForm');
+  const carField = document.getElementById('cCar');
+  const budgetField = document.getElementById('cBudget');
 
-  f.addEventListener("submit", function (e) {
-    e.preventDefault();
-    st.textContent = ""; st.className = "form__status";
-    var ok = true;
-    if (val("cCar").length < 2) { err("cCar", "Укажите марку или модель."); ok = false; }
-    if (!/^\d{3,7}$/.test(val("cBudget").replace(/\s/g, ""))) { err("cBudget", "Введите бюджет цифрами."); ok = false; }
-    if (val("cContact").length < 5) { err("cContact", "Оставьте телефон или @telegram."); ok = false; }
-    if (!ok) return;
-    if (f.action.startsWith("mailto:")) {
-      var data = new FormData(f);
-      var labels = {form:"Запрос", country:"Страна", car:"Автомобиль", budget:"Бюджет, USD", year:"Год не старше", contact:"Контакт"};
-      var message = Array.from(data.entries()).map(function (entry) { return (labels[entry[0]] || entry[0]) + ": " + entry[1]; }).join("\n");
-      window.location.href = f.action + "?subject=" + encodeURIComponent("Подбор авто: " + val("cCar")) + "&body=" + encodeURIComponent(message);
-      st.textContent = "Запрос подготовлен. Отправьте письмо в почтовом приложении. Если оно не открылось, напишите на nixon0293@gmail.com.";
-      st.className = "form__status is-ok";
+  carField.addEventListener('input', () => carField.setCustomValidity(''));
+  request.addEventListener('submit', event => {
+    event.preventDefault();
+    const car = carField.value.trim();
+    if (car.length < 2) {
+      carField.setCustomValidity('Укажите марку или модель.');
+      carField.reportValidity();
       return;
     }
-    btn.disabled = true;
-    st.textContent = "Отправляю…";
-    fetch(f.action, { method: "POST", body: new FormData(f), headers: { Accept: "application/json" } })
-      .then(function (r) {
-        if (!r.ok) throw new Error("HTTP " + r.status);
-        f.reset(); summary();
-        st.textContent = "Заявка принята! Пришлю варианты и расчёт в ближайшее время.";
-        st.className = "form__status is-ok";
-      })
-      .catch(function () {
-        st.textContent = "Не удалось отправить. Попробуйте ещё раз или напишите на почту.";
-        st.className = "form__status is-err";
-      })
-      .then(function () { btn.disabled = false; });
+
+    const budget = budgetField.value;
+    const body = 'Здравствуйте, Дмитрий! Интересует подбор: ' + car +
+      (budget ? '\nБюджет: ' + budget + ' USD.' : '');
+    location.href = request.getAttribute('action') +
+      '?subject=' + encodeURIComponent('Подбор авто: ' + car) +
+      '&body=' + encodeURIComponent(body);
   });
 })();
-
 
 // ===== нарисованные машины: едут слева направо, пока секция проходит экран =====
 (function () {
