@@ -93,7 +93,7 @@
 
   function revealHero() {
     if (preference.matches) return;
-    document.querySelectorAll('.hero__subtitle,.hero__desc,.hero__actions,.hero-quick-links,.hero__visual').forEach((element,index) => {
+    document.querySelectorAll('.hero__subtitle,.hero__desc,.hero-quick-links,.hero__visual').forEach((element,index) => {
       const animation=element.animate([{opacity:0,transform:'translateY(24px)'},{opacity:1,transform:'translateY(0)'}],{duration:1000,delay:150+index*100,easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'});
       animations.add(animation);
       animation.finished.then(()=>animations.delete(animation)).catch(()=>{});

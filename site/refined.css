@@ -360,3 +360,9 @@ body {
 }
 .request-form .field input::placeholder { color: #b3a6a1; }
 .request-form .field input:focus { border-color: #ff815d; }
+
+.hero__actions, .is-ready .hero__actions {
+  translate: none;
+  transition: opacity .55s ease;
+}
+.is-ready .hero__actions { transition-delay: .25s; }
