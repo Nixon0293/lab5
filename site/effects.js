@@ -2,7 +2,7 @@
 (function(){
  'use strict';
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
- const elements=[...document.querySelectorAll('.vehicle,.method-grid article,.page-cta,.journey-heading,.catalog-feature')];
+ const elements=[...document.querySelectorAll('.method-grid article,.page-cta,.journey-heading,.catalog-feature')];
  if(!reduced.matches){
   const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('entered');observer.unobserve(e.target);}}),{threshold:.08});
   elements.forEach((element,index)=>{element.classList.add('entrance');element.style.setProperty('--delay',Math.min(index%3,2)*70+'ms');observer.observe(element);});
@@ -14,6 +14,6 @@
   });
  }
  const model=new URLSearchParams(location.search).get('model');
- const names={'geely-monjaro':'Geely Monjaro','geely-atlas':'Geely Atlas','geely-cityray':'Geely Cityray','geely-ex5':'Geely EX5','geely-ex2':'Geely EX2','belgee-s50':'BELGEE S50','belgee-x50plus':'BELGEE X50+','belgee-x70':'BELGEE X70'};
+ const names={'geely-monjaro':'Geely Monjaro','geely-atlas':'Geely Atlas','geely-cityray':'Geely Cityray','geely-ex5':'Geely EX5','geely-ex2':'Geely EX2','belgee-s50':'BELGEE S50','belgee-x50plus':'BELGEE X50+','belgee-x70':'BELGEE X70','haval-jolion':'HAVAL Jolion','haval-f7':'HAVAL F7','haval-f7x':'HAVAL F7x','haval-dargo':'HAVAL Dargo','haval-h7':'HAVAL H7','bmw-x3':'BMW X3','bmw-x5':'BMW X5','audi-q5':'Audi Q5','audi-q7':'Audi Q7'};
  if(names[model]&&document.querySelector('#cCar')){document.querySelector('#cCar').value=names[model];document.querySelector('#cCar').dispatchEvent(new Event('input',{bubbles:true}));}
 })();

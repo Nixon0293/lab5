@@ -7,6 +7,7 @@
   const button = document.querySelector('.motion-toggle');
   let paused = false, frame = 0, last = 0, clock = 0, distance = 0, progress = 0;
   const visible = new Set();
+  const cars = scenes.map(scene => scene.querySelector('.drive-car'));
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => entry.isIntersecting ? visible.add(entry.target) : visible.delete(entry.target));
     start();
@@ -28,7 +29,7 @@
     section.style.setProperty('--journey',progress.toFixed(4));
     scenes.forEach((scene,index) => {
       if (!visible.has(scene)) return;
-      const car = scene.querySelector('.drive-car');
+      const car = cars[index];
       const width = car.offsetWidth;
       let x = Math.sin(clock*.38)*12;
       if (index) x = journeyX(scene, width, progress);
@@ -52,7 +53,7 @@
   }
   function staticPose() {
     scenes.forEach((scene,index)=> {
-      const width=scene.querySelector('.drive-car').offsetWidth;
+      const width=cars[index].offsetWidth;
       scene.style.setProperty('--car-x',index?journeyX(scene,width,preference.matches?.5:progress)+'px':(preference.matches?'0px':-(scene.clientWidth*.4+width+24)*(1-Math.min(clock/2.8,1))**3+'px'));
     });
   }

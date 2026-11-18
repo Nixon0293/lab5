@@ -11,9 +11,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20261118">
   <link rel="stylesheet" href="motion.css?v=20261115-3">
-<link rel="stylesheet" href="studio.css?v=20261116"></head>
+<link rel="stylesheet" href="studio.css?v=20261116">
+<link rel="stylesheet" href="refined.css?v=20261118">
+</head>
 <body>
   <a class="skip-link" href="#home">К содержимому</a>
 
@@ -25,7 +27,6 @@
   </div>
 
   <!-- Курсор и индикатор прокрутки -->
-  <div class="cursor" id="cursor" aria-hidden="true"><span id="cursorLabel"></span></div>
   <div class="progress" id="progress" aria-hidden="true"></div>
 
   <!-- Шапка и меню -->
@@ -44,17 +45,18 @@
 
     <nav class="nav" id="nav" aria-label="Основное меню">
       <ul class="nav__list">
-        <li><a href="#home" class="nav__link" data-num="01"><span class="roll">Главная</span></a></li>
+        <li><a href="#home" class="nav__link" data-num="01" aria-current="page"><span class="roll">Главная</span></a></li>
         <li><a href="#achievements" class="nav__link" data-num="02"><span class="roll">Достижения</span></a></li>
         <li><a href="#tech" class="nav__link" data-num="03"><span class="roll">Технологии</span></a></li>
         <li><a href="#cars" class="nav__link" data-num="04"><span class="roll">Галерея</span></a></li>
-        <li><a href="catalog.html" class="nav__link"><span class="roll">Каталог ↗</span></a></li>
-        <li><a href="customs.html" class="nav__link"><span class="roll">Растаможка ↗</span></a></li>
+        <li><a href="catalog.html" class="nav__link"><span class="roll">Каталог</span></a></li>
+        <li><a href="customs.html" class="nav__link"><span class="roll">Растаможка</span></a></li>
         <li><a href="#contact" class="nav__link" data-num="05"><span class="roll">Контакты</span></a></li>
+      <li class="nav__contact"><a class="nav__link" href="mailto:nixon0293@gmail.com">Написать Дмитрию</a></li>
       </ul>
     </nav>
 
-    <a href="mailto:nixon0293@gmail.com" class="header__cta btn btn--small"><span class="roll">Связаться</span></a>
+    <a href="mailto:nixon0293@gmail.com" class="header__cta btn btn--small"><span class="roll">Написать Дмитрию</span></a>
 
     <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">
       <span></span><span></span>
@@ -69,27 +71,25 @@
 
       <div class="hero__inner">
         <div class="hero__text">
-          <p class="hero__tag"><i class="dot"></i> Минск, Беларусь</p>
+          <p class="hero__tag"><i class="dot"></i> Дмитрий Некрашевич · Минск</p>
 
           <h1 class="hero__title" id="heroTitle">
             <span class="line"><span>Ваше авто.</span></span>
             <span class="line"><span>Мой <em>маршрут.</em></span></span>
           </h1>
 
-          <h2 class="hero__subtitle">Я Дмитрий Некрашевич. Подбираю и привожу автомобили под ключ.</h2>
+          <h2 class="hero__subtitle">Подбираю и привожу автомобили под ключ.</h2>
 
-          <p class="hero__desc">
-            Веду сделку на всех этапах: считаю итоговую стоимость, проверяю авто, договариваюсь,
-            организую доставку и оформление. От запроса клиента до передачи ключей.
-          </p>
+          <p class="hero__desc">Лично веду сделку от первого разговора до передачи ключей. Подбираю варианты под ваш бюджет, проверяю автомобиль и организую доставку.</p>
 
           <div class="hero__actions">
             <a href="mailto:nixon0293@gmail.com" class="btn btn--primary magnetic"><span class="roll">Связаться со мной</span><b class="btn__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></b></a>
             <a href="catalog.html" class="btn btn--ghost magnetic"><span class="roll">Каталог автомобилей ↗</span></a>
           </div>
+          <a class="hero-process" href="#roadshow">Как проходит привоз <span aria-hidden="true">↓</span></a>
         </div>
 
-        <div class="hero__visual" id="heroVisual" data-cursor="Смотри">
+        <div class="hero__visual" id="heroVisual">
           <span class="hero__arch-back" aria-hidden="true"></span>
           <div class="arch" id="arch">
             <img class="arch__img arch__img--portrait" src="img/photo.jpg" alt="Дмитрий Некрашевич" width="400" height="400">
@@ -126,6 +126,17 @@
       </div>
     </section>
 
+    <section class="visit-actions" aria-labelledby="visit-title">
+      <div class="visit-actions__inner">
+        <h2 id="visit-title">С чего начнём?</h2>
+        <div class="visit-actions__grid">
+          <a class="visit-action reveal" href="catalog.html#models"><strong>Выбрать модель</strong><span>Фото и бюджет привоза</span><b aria-hidden="true">↗</b></a>
+          <a class="visit-action reveal" href="customs.html"><strong>Посчитать растаможку</strong><span>Пошлина и расходы</span><b aria-hidden="true">↗</b></a>
+          <a class="visit-action reveal" href="mailto:nixon0293@gmail.com"><strong>Написать мне</strong><span>Обсудим ваш запрос</span><b aria-hidden="true">↗</b></a>
+        </div>
+      </div>
+    </section>
+
     <!-- ===================== СЕКЦИЯ 2: МОИ ДОСТИЖЕНИЯ (Flexbox) ===================== -->
     <section class="achievements" id="achievements" data-theme="orange">
       <div class="ghost" aria-hidden="true" data-hshift="0.1">Результат</div>
@@ -139,7 +150,7 @@
 
         <div class="cards">
 
-          <article class="card reveal tilt" data-cursor="Цифры">
+          <article class="card reveal tilt">
             <div class="card__media">
               <span class="card__idx">01</span>
               <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="24" cy="24" r="9"/><circle cx="44" cy="26" r="7"/><path d="M8 52c0-9 7-15 16-15s16 6 16 15M38 40c8-2 18 2 18 12"/></svg>
@@ -153,7 +164,7 @@
             </div>
           </article>
 
-          <article class="card reveal tilt" data-cursor="Цифры">
+          <article class="card reveal tilt">
             <div class="card__media">
               <span class="card__idx">02</span>
               <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="34" r="20"/><path d="M32 34V20M32 34l10 6M26 8h12"/></svg>
@@ -167,7 +178,7 @@
             </div>
           </article>
 
-          <article class="card reveal tilt" data-cursor="Цифры">
+          <article class="card reveal tilt">
             <div class="card__media">
               <span class="card__idx">03</span>
               <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="12" width="44" height="40" rx="6"/><path d="M10 24h44M22 36l6 6 14-14"/></svg>
@@ -181,7 +192,7 @@
             </div>
           </article>
 
-          <article class="card reveal tilt" data-cursor="Цифры">
+          <article class="card reveal tilt">
             <div class="card__media">
               <span class="card__idx">04</span>
               <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M6 40l6-14c1-3 3-4 6-4h24c3 0 5 1 7 4l7 10c1 1 2 2 2 4v4H6z"/><circle cx="20" cy="46" r="6"/><circle cx="46" cy="46" r="6"/></svg>
@@ -311,15 +322,15 @@
         </header>
 
         <div class="gallery">
-          <figure class="shot shot--tall reveal" data-cursor="Авто">
+          <figure class="shot shot--tall reveal">
             <a class="shot__frame" href="catalog.html" aria-label="Смотреть каталог автомобилей"><img src="img/gallery-bmw.jpg" alt="Реальная фотография BMW M4 на дороге" loading="lazy" width="488" height="627"></a>
             <figcaption><i>01</i> Подбор <em>под вас</em></figcaption>
           </figure>
-          <figure class="shot shot--wide reveal" data-cursor="Авто">
+          <figure class="shot shot--wide reveal">
             <a class="shot__frame" href="catalog.html" aria-label="Смотреть каталог автомобилей"><img src="img/gallery-porsche.jpg" alt="Реальная фотография чёрного Porsche 911 в городе" loading="lazy" width="864" height="570"></a>
             <figcaption><i>02</i> Проверка <em>до покупки</em></figcaption>
           </figure>
-          <figure class="shot shot--mid reveal" data-cursor="Авто">
+          <figure class="shot shot--mid reveal">
             <a class="shot__frame" href="catalog.html" aria-label="Смотреть каталог автомобилей"><img src="img/gallery-road.jpg" alt="Реальная фотография белого Porsche 911 на загородной дороге" loading="lazy" width="780" height="981"></a>
             <figcaption><i>03</i> Доставка <em>без хлопот</em></figcaption>
           </figure>
@@ -479,8 +490,8 @@
     <a href="#home" class="footer__up"><span class="roll">Наверх ↑</span></a>
   </footer>
 
-  <script src="script.js?v=20261116"></script>
-  <script src="motion.js"></script>
-  <script src="effects.js"></script>
-<script src="studio.js?v=20261116"></script></body>
+  <script src="script.js?v=20261118"></script>
+  <script src="motion.js?v=20261118"></script>
+  <script src="effects.js?v=20261118"></script>
+<script src="studio.js?v=20261116"></script><script src="navigation.js?v=20261118"></script></body>
 </html>

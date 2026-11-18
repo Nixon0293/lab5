@@ -18,7 +18,6 @@
 
   var body = document.body;
   var hero = $("#home");
-  var header = $("#header");
 
   /* ---------------------------------------------------------
      1. Подготовка текста
@@ -26,6 +25,7 @@
 
   // «рулетка»: дублируем текст, чтобы при наведении он прокручивался
   $$(".roll").forEach(function (el) {
+    if (el.closest("#header")) return;
     var text = el.textContent;
     el.innerHTML = "<span>" + text + "</span><span aria-hidden=\"true\">" + text + "</span>";
   });
@@ -172,78 +172,6 @@
   })();
 
   /* ---------------------------------------------------------
-     3. Курсор и «линза» на фото (только для мыши)
-     --------------------------------------------------------- */
-  var cursor = $("#cursor");
-  var cursorLabel = $("#cursorLabel");
-  var arch = null; // Portrait uses one stable image, without the animated lens.
-
-  var mouse = { x: -100, y: -100 };
-  var cur = { x: -100, y: -100 };
-  var lens = { x: 0, y: 0, r: 0, tx: 0, ty: 0, tr: 0, ready: false };
-  var refreshCursor = function () {};
-
-  if (finePointer && !reduceMotion) {
-    body.classList.add("has-cursor");
-
-    function applyCursorTarget(t) {
-      if (!t || !t.closest) return;
-      var themeEl = t.closest ? t.closest("[data-theme]") : null;
-      if (themeEl) body.setAttribute("data-cur", themeEl.getAttribute("data-theme"));
-
-      var labelEl = t.closest("[data-cursor]");
-      var linkEl = t.closest("a, button, label, input, textarea");
-      if (labelEl) {
-        cursorLabel.textContent = labelEl.getAttribute("data-cursor");
-        cursor.classList.add("is-label");
-        cursor.classList.remove("is-link");
-      } else {
-        cursor.classList.remove("is-label");
-        cursor.classList.toggle("is-link", !!linkEl);
-      }
-    }
-    refreshCursor = function () { applyCursorTarget(document.elementFromPoint(mouse.x, mouse.y)); };
-
-    window.addEventListener("pointermove", function (e) {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-      cursor.classList.add("is-on");
-      applyCursorTarget(e.target);
-    });
-    document.addEventListener("mouseleave", function () { cursor.classList.remove("is-on"); });
-    window.addEventListener("pointerdown", function () { cursor.classList.add("is-down"); });
-    window.addEventListener("pointerup", function () { cursor.classList.remove("is-down"); });
-
-    if (arch) {
-      arch.addEventListener("pointerenter", function () { lens.tr = 150; });
-      arch.addEventListener("pointerleave", function () { lens.tr = 0; });
-      arch.addEventListener("pointermove", function (e) {
-        var r = arch.getBoundingClientRect();
-        lens.tx = e.clientX - r.left;
-        lens.ty = e.clientY - r.top;
-        if (!lens.ready) { lens.x = lens.tx; lens.y = lens.ty; lens.ready = true; }
-      });
-    }
-
-    (function loop() {
-      cur.x += (mouse.x - cur.x) * 0.2;
-      cur.y += (mouse.y - cur.y) * 0.2;
-      cursor.style.transform = "translate(" + cur.x.toFixed(1) + "px," + cur.y.toFixed(1) + "px)";
-
-      if (arch) {
-        lens.x += (lens.tx - lens.x) * 0.18;
-        lens.y += (lens.ty - lens.y) * 0.18;
-        lens.r += (lens.tr - lens.r) * 0.12;
-        arch.style.setProperty("--lx", lens.x.toFixed(1) + "px");
-        arch.style.setProperty("--ly", lens.y.toFixed(1) + "px");
-        arch.style.setProperty("--lr", Math.max(0, lens.r).toFixed(1) + "px");
-      }
-      requestAnimationFrame(loop);
-    })();
-  }
-
-
-  /* ---------------------------------------------------------
      4. Прокрутка: индикатор, шапка, наезд секций, параллакс, бегущая строка
      --------------------------------------------------------- */
   var progress = $("#progress");
@@ -271,11 +199,6 @@
     if (Math.abs(delta) > 0) dir = delta > 0 ? 1 : -1;
     scrollVel = delta;
 
-    if (header && !navOpen()) {
-      header.classList.toggle("is-solid", y > 40);
-      header.classList.toggle("is-hidden", delta > 0 && y > 320);
-      if (delta < 0) header.classList.remove("is-hidden");
-    }
     lastY = y;
 
     // hero уходит «вглубь», пока секции наезжают
@@ -300,7 +223,6 @@
     }
 
     updateScrub();
-    refreshCursor();
   }
 
   var ticking = false;
@@ -419,33 +341,19 @@
   /* ---------------------------------------------------------
      5. Бургер-меню и активный пункт
      --------------------------------------------------------- */
-  var burger = $("#burger");
-  var nav = $("#nav");
-
-  function navOpen() { return nav && nav.classList.contains("is-open"); }
-
-  function setNav(open) {
-    if (!burger || !nav) return;
-    burger.classList.toggle("is-open", open);
-    nav.classList.toggle("is-open", open);
-    burger.setAttribute("aria-expanded", open ? "true" : "false");
-    burger.setAttribute("aria-label", open ? "Закрыть меню" : "Открыть меню");
-    body.style.overflow = open ? "hidden" : "";
-    if (open && header) header.classList.remove("is-hidden");
-  }
-
-  if (burger) burger.addEventListener("click", function () { setNav(!navOpen()); });
-  $$(".nav__link").forEach(function (link) { link.addEventListener("click", function () { setNav(false); }); });
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") setNav(false); });
-  window.addEventListener("resize", function () { if (window.innerWidth > 900) setNav(false); });
-
   var sections = $$("main section[id]");
   var links = $$(".nav__link");
   if ("IntersectionObserver" in window) {
     var spy = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        links.forEach(function (l) { l.classList.toggle("is-active", l.getAttribute("href") === "#" + entry.target.id); });
+        var active = links.find(function (link) { return link.getAttribute("href") === "#" + entry.target.id; });
+        if (!active) return;
+        links.forEach(function (link) {
+          link.classList.toggle("is-active", link === active);
+          if (link === active) link.setAttribute("aria-current", entry.target.id === "home" ? "page" : "location");
+          else link.removeAttribute("aria-current");
+        });
       });
     }, { rootMargin: "-45% 0px -50% 0px" });
     sections.forEach(function (s) { spy.observe(s); });
