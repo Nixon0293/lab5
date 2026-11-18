@@ -19,7 +19,7 @@
     "body": "Кроссовер",
     "fuel": "Бензин",
     "image": "img/geely-atlas.webp",
-    "imageSource": "https://www.geely.by/assets/components/phpthumbof/cache/5fbd305c5587513e7907b2c4047ad6707a0e8c2.78071bf9c1c00fd2274947b9a791fffb7.webp",
+    "imageSource": "https://www.geely.by/assets/cache_image/assets/template/img/models/atlas/atlas-bg_0x0_cd6.webp",
     "currency": "USD",
     "condition": "Новый автомобиль"
   },
@@ -164,7 +164,7 @@
     "price": 47400,
     "years": "2020–2026",
     "image": "img/bmw-x3.webp",
-    "imageSource": "https://prod.cosy.bmw.cloud/bmwweb/cosySec?COSY-EU-100-7331pKAuhFqIbVBIHS92mvhO20AdKKM4eC9iwWNRduIwQ081ZmQGwgY3hyapRBmSn0M6726z%250LJAusAtTWgFe0Q3nF8vLId4PwTQLdecX83D%25hr49Gwgk2hLKozL1uxHD672gfrR5iWw8jS929Fe0SwJeieZeljuzVMRrdDSkNh56x4VA0ogYZINF4HvmJx0Kc%252yKH4WxfjTN0cP81D3R3xbUEqcNA89GsLx97UiprJ8V%25Gw6ZuUk4ptYRSGBb67m5VpK6YCygNLaWmlTv0J6NyX324A1nTQdjcFIj3azDxKFLdnkq8hWlzOALUoclkIFJGHXXABKup%255FFeWS6hB3KMPVYoe9WhbNmHMgPo9Q9UPlzLekYj7zOSs5m%2565e1Ufc4Ws8onNpofPtUDVkdooMscgpnG7xqLvQFjz9nE471OREHswTlB9%25UdDOPSIagdIqCAusKiY%25ZwFSN0",
+    "imageSource": "https://mediapool.bmwgroup.com/download/edown/pressclub/publicq?actEvent=scaleBig&attachment=1&dokNo=P90554870&quality=90&square=0",
     "condition": "С пробегом · 2020–2026",
     "currency": "USD"
   },
@@ -177,7 +177,7 @@
     "price": 67800,
     "years": "2020–2025",
     "image": "img/bmw-x5.webp",
-    "imageSource": "https://bmw.scene7.com/is/image/BMW/BMW-2027-X5-LP-ModelLineUp-gradient-2:1to1?fmt=webp&wid=850",
+    "imageSource": "https://mediapool.bmwgroup.com/download/edown/pressclub/publicq?actEvent=scaleBig&attachment=1&dokNo=P90489747&quality=90&square=0",
     "condition": "С пробегом · 2020–2025",
     "currency": "USD"
   },

@@ -393,7 +393,6 @@ body {
   object-position: var(--photo-position, center center);
 }
 .vehicle-media--cutout img { object-fit: contain; padding: 16px 10px 4px; }
-.vehicle-media--studio img { object-fit: contain; padding: 0; }
 .vehicle:is([data-id="audi-q5"],[data-id="audi-q7"]), .model-media:is([data-model="audi-q5"],[data-model="audi-q7"]) { --photo-position: center 53%; }
 .vehicle[data-id="bmw-x5"],.model-media[data-model="bmw-x5"] { --photo-position: center 44%; }
 .vehicle-media img::selection { background: transparent; }
@@ -446,16 +445,6 @@ body {
   max-height: none;
   background: transparent;
 }
-.model-media figcaption {
-  position: absolute;
-  left: 16px;
-  bottom: 14px;
-  padding: 5px 9px;
-  border-radius: 6px;
-  background: #17141be8;
-  font-size: 10px;
-  color: #e9dbd2;
-}
 .model-info { display: grid; align-content: center; padding: 32px clamp(22px,4vw,48px); }
 .model-info .action-button { width: fit-content; min-height: 46px; }
 .model-dialog[open] .model-info { animation: model-copy-in .65s var(--motion-out) both; }
@@ -480,8 +469,6 @@ body { overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) {
   .journey-distance, .journey-progress { visibility: hidden; }
 }
-.vehicle[data-id="geely-ex2"] .vehicle-media img,
-.model-media[data-model="geely-ex2"] img { scale: 1.12; }
 .gallery {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(12px, 2vw, 27px);
@@ -500,8 +487,92 @@ body { overflow-x: clip; }
   .journey-distance b { font: 500 22px/1 var(--display); margin: 0; }
 }
 .gallery-accent { display: inline-block; white-space: nowrap; }
-.vehicle-media--studio img {
-  mix-blend-mode: screen;
-  scale: 1.32;
-  translate: -3% 0;
+
+/* Edge-to-edge photo compositions. Per-model settings apply in both views. */
+.catalog-intro .catalog-feature, .vehicle, .model-dialog, .model-media {
+  border: 0;
+}
+.catalog-intro .catalog-feature { box-shadow: none; }
+.vehicle { box-shadow: none; }
+.vehicle:hover { box-shadow: 0 15px 32px #08050936; }
+.vehicle-media { aspect-ratio: 8 / 5; }
+.vehicle-media img {
+  scale: var(--photo-scale, 1);
+  transform-origin: var(--photo-origin, 50% 56%);
+}
+.vehicle-media--cutout img {
+  padding: 16px 6% 4px;
+}
+.vehicle[data-id="bmw-x3"], .model-media[data-model="bmw-x3"] {
+  --photo-position: 50% 62%;
+  --photo-scale: 1.13;
+}
+.vehicle[data-id="bmw-x5"], .model-media[data-model="bmw-x5"] {
+  --photo-position: 50% 68%;
+  --photo-origin: 81% 63%;
+  --photo-scale: 1.39;
+}
+.model-media {
+  display: block;
+  position: relative;
+  aspect-ratio: auto;
+}
+.model-media .model-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  max-height: none;
+}
+.gallery .shot figcaption { border-top: 0; padding-top: 12px; }
+.gallery .shot__frame::after { border: 0; background: #18161cc2; }
+@media (max-width:720px) {
+  .model-media { height: auto; aspect-ratio: 8 / 5; }
+}
+.hero-photo-backdrop {
+  position: absolute;
+  inset: 0 0 9% 25%;
+  pointer-events: none;
+  background: center 57% / cover no-repeat url("img/hero-porsche.webp");
+  mask-image: linear-gradient(90deg, transparent, #000 49%);
+  opacity: .31;
+}
+.hero-photo-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #201a2020 35%, #19171b 100%);
+}
+@media(prefers-reduced-motion:no-preference) {
+  .hero-photo-backdrop { animation: hero-photo-in 1.4s var(--motion-out) both; }
+}
+@keyframes hero-photo-in {
+  from { opacity: 0; scale: 1.035; }
+  to { opacity: .31; scale: 1; }
+}
+@media(max-width:720px) {
+  .hero-photo-backdrop {
+    inset: 0 0 9%;
+    background-position: 61% 46%;
+    mask-image: linear-gradient(100deg, transparent, #000 85%);
+    opacity: .22;
+    animation: none;
+  }
+}
+.vehicle:is([data-id="haval-jolion"], [data-id="haval-f7x"], [data-id="haval-dargo"]) .vehicle-media img,
+.model-media:is([data-model="haval-jolion"], [data-model="haval-f7x"], [data-model="haval-dargo"]) img {
+  clip-path: polygon(29% 0,100% 0,100% 100%,0 100%,0 35%,29% 35%);
+}
+.vehicle:is([data-id="geely-atlas"], [data-id="audi-q7"]),
+.model-media:is([data-model="geely-atlas"], [data-model="audi-q7"]) {
+  --photo-scale: 1.13;
+}
+.vehicle:is([data-id="belgee-s50"], [data-id="belgee-x50plus"], [data-id="belgee-x70"]),
+.model-media:is([data-model="belgee-s50"], [data-model="belgee-x50plus"], [data-model="belgee-x70"]) {
+  --photo-scale: 1.18;
+}
+.vehicle:is([data-id="audi-q5"], [data-id="geely-ex2"]),
+.model-media:is([data-model="audi-q5"], [data-model="geely-ex2"]) {
+  --photo-scale: 1.25;
 }

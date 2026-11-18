@@ -159,7 +159,6 @@
   var speeders = $$("[data-speed]").map(function (el) {
     return { el: el, k: parseFloat(el.getAttribute("data-speed")) };
   });
-  var badge = $("#badge");
 
   var lastY = window.scrollY;
   var scrollVel = 0;
@@ -195,7 +194,6 @@
         s.el.style.setProperty("--hx", (top * s.k).toFixed(1) + "px");
       });
       speeders.forEach(function (s) { s.el.style.setProperty("--sy", (y * s.k * -1).toFixed(1) + "px"); });
-      if (badge) badge.style.setProperty("--by", (y * -0.06).toFixed(1) + "px");
     }
 
     updateScrub();
@@ -214,8 +212,6 @@
   var track2 = $("#marqueeTrack2");
   if (track2) marqueeList.push({ el: track2, x: 0, flip: -1, wrap: track2.parentNode });
 
-  var badgeRing = $(".badge__ring");
-  var badgeAngle = 0;
 
   if (!reduceMotion) {
     var vel = 0;
@@ -235,10 +231,6 @@
       });
 
       // бейдж вращается быстрее, когда прокручиваешь страницу
-      if (badgeRing) {
-        badgeAngle += 0.32 + vel * 0.28 * dir;
-        badgeRing.style.transform = "rotate(" + badgeAngle.toFixed(1) + "deg)";
-      }
       requestAnimationFrame(runMarquee);
     })();
   }
