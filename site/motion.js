@@ -8,7 +8,7 @@
   const stages = [...section.querySelectorAll('.journey-stage')];
   const meter = section.querySelector('.journey-distance b');
   const button = document.querySelector('.motion-toggle');
-  let paused = false, frame = 0, last = 0, clock = 0, distance = 0, journeyDistance = 0, progress = 0, percent = -1;
+  let paused = false, frame = 0, last = 0, clock = 0, distance = 0, progress = 0, percent = -1;
   const visible = new Set();
   const cars = scenes.map(scene => scene.querySelector('.drive-car'));
   const observer = new IntersectionObserver(entries => {
@@ -44,7 +44,6 @@
     progress = target === 1 ? 1 : progress + (target - progress) * (1 - Math.exp(-dt * 14));
     showProgress(progress);
     distance += dt*175;
-    journeyDistance += dt * 228 * Math.min(1, (1 - progress) * 7);
     section.style.setProperty('--journey',progress.toFixed(4));
     scenes.forEach((scene,index) => {
       if (!visible.has(scene)) return;
@@ -54,9 +53,13 @@
       if (index) x = journeyX(scene, width, progress);
       else x -= (scene.clientWidth*.4 + width + 24)*(1-Math.min(clock/2.8,1))**3;
       scene.style.setProperty('--car-x',x.toFixed(2)+'px');
-      const roadDistance = index ? journeyDistance : distance;
+      const roadDistance = index ? x - journeyX(scene, width, 0) : distance;
       scene.style.setProperty('--road',(-roadDistance).toFixed(2)+'px');
-      scene.style.setProperty('--wheel',(roadDistance/Math.max(width*.051,1)*180/Math.PI).toFixed(2)+'deg');
+      const wheelDegrees = roadDistance / Math.max(width * .07, 1) * 180 / Math.PI;
+      scene.style.setProperty('--wheel', (wheelDegrees % 360).toFixed(2) + 'deg');
+      const moving = index ? Math.abs(progress - previous) > .0001 : clock < 2.8;
+      const rimLight = moving ? (Math.cos(wheelDegrees * Math.PI / 90) + 1) * .065 : 0;
+      scene.style.setProperty('--rim-light', rimLight.toFixed(3));
       scene.style.setProperty('--bounce',(Math.sin(clock*10)*.45+Math.sin(clock*17)*.2).toFixed(2)+'px');
       scene.style.setProperty('--pitch',clamp((progress-previous)*-65+Math.sin(clock*6)*.055,-.7,.7).toFixed(3)+'deg');
     });
