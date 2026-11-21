@@ -576,3 +576,12 @@ body { overflow-x: clip; }
 .model-media:is([data-model="audi-q5"], [data-model="geely-ex2"]) {
   --photo-scale: 1.25;
 }
+
+.visit-actions, .achievement-surround { background: #211e24; }
+#achievements { box-shadow: none; }
+#achievements .card { translate: none; rotate: none; transform: none; }
+#achievements .achievement-detail { font-size: .9rem; line-height: 1.5; color: #b9b7b0; }
+@media (min-width: 821px) {
+  #achievements .card__big { height: clamp(100px, 9vw, 128px); flex: none; }
+  #achievements .card__title { min-height: 2.4em; line-height: 1.2; }
+}
