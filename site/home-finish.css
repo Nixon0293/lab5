@@ -141,3 +141,32 @@
 #tech .tcard:hover .tcard__icon svg {
   transform: none;
 }
+
+/* Share the vertical rhythm across every achievement in the same row. */
+@media (min-width: 701px) {
+  #achievements .cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 0;
+  }
+  #achievements .card {
+    display: grid;
+    grid-row: span 5;
+    grid-template-rows: subgrid;
+    margin-bottom: clamp(12px, 1.4vw, 22px);
+  }
+  #achievements .card__body {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    align-items: start;
+  }
+  #achievements .card__big,
+  #achievements .card__title {
+    height: auto;
+    min-height: 0;
+  }
+}
+@media (min-width: 1120px) {
+  #achievements .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
