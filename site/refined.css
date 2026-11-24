@@ -773,3 +773,72 @@ body { overflow-x: clip; }
   border: 0;
   background: #17141608;
 }
+.drive-scene--hero .drive-car__body > img {
+  animation: none;
+  filter: brightness(calc(1 + var(--arrival-light, 0)));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #achievements .card.is-in .card__media svg > * {
+    animation: trace-achievement .85s cubic-bezier(.25,.65,.25,1) backwards;
+  }
+  #achievements .card.is-in .card__media svg > :nth-child(2) { animation-delay: .12s; }
+  #achievements .card.is-in .card__media svg > :nth-child(3) { animation-delay: .2s; }
+  @keyframes trace-achievement {
+    from { stroke-dasharray: 1; stroke-dashoffset: 1; }
+    to { stroke-dasharray: 1; stroke-dashoffset: 0; }
+  }
+  #dutyBar, #recycleBar, #feesBar { transition: flex-grow .42s cubic-bezier(.2,.7,.3,1); }
+  .model-dialog[open]::backdrop { animation: model-backdrop .28s ease-out; }
+  @keyframes model-backdrop { from { opacity: 0; } to { opacity: 1; } }
+}
+
+#roadshow .journey-stage {
+  position: relative;
+  overflow: hidden;
+  box-shadow: none;
+}
+#roadshow .journey-stage::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  background: var(--orange);
+  transform: scaleX(var(--stage-progress, 0));
+  transform-origin: left;
+}
+#roadshow .journey-stage.is-complete span {
+  position: relative;
+  color: transparent;
+  border-color: var(--orange);
+  background: var(--orange);
+}
+#roadshow .journey-stage.is-complete span::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 5px;
+  border: solid #17110d;
+  border-width: 0 0 2px 2px;
+  transform: translateY(-1px) rotate(-45deg);
+}
+
+/* Keep the masthead steady when moving between the three pages. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  .header { view-transition-name: masthead; }
+  ::view-transition-group(masthead) { animation-duration: .28s; }
+  ::view-transition-old(masthead) { animation: none; opacity: 0; }
+  ::view-transition-new(masthead) { animation: none; }
+  ::view-transition-old(root) { animation: page-out .22s ease-in both; }
+  ::view-transition-new(root) { animation: page-in .38s cubic-bezier(.2,.72,.25,1) both; }
+  @keyframes page-out { to { opacity: 0; transform: translateY(-5px); } }
+  @keyframes page-in { from { opacity: 0; transform: translateY(10px); } }
+}
+@media (max-width: 1080px) and (prefers-reduced-motion: no-preference) {
+  .header .nav.is-open li { animation: menu-arrival .32s var(--motion-out) backwards; }
+  .header .nav.is-open li:nth-child(n+2) { animation-delay: .035s; }
+  .header .nav.is-open li:nth-child(n+4) { animation-delay: .065s; }
+  .header .nav.is-open li:nth-child(n+6) { animation-delay: .09s; }
+  @keyframes menu-arrival { from { opacity: .3; transform: translateX(-8px); } }
+}

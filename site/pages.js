@@ -79,6 +79,8 @@
       'Добавить в избранное: ' + card.dataset.name);
   }
 
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const animatePhoto = window.Motion?.animate;
   cards.forEach(card => {
     const save = card.querySelector('[data-save]');
     const details = card.querySelector('.vehicle-details');
@@ -105,19 +107,105 @@
       dialog.querySelector('.vehicle-kicker').textContent = card.querySelector('.vehicle-kicker').textContent;
       dialog.querySelector('.model-description').textContent = card.dataset.description;
       dialog.querySelector('.vehicle-budget strong').textContent = card.querySelector('.vehicle-budget strong').textContent;
+      const imported = ['BMW', 'Audi'].includes(card.dataset.brand);
+      dialog.querySelector('.model-note').textContent = imported
+        ? 'Медиана оценок привоза до Минска по выборке за октябрь 2026 года. Цена относится к диапазону годов выше. Доставку и таможенные платежи уточню для выбранной машины.'
+        : 'Ориентир для нового автомобиля по расчёту на ноябрь 2026 года. Комплектацию, стоимость доставки и таможенные платежи уточню при подборе.';
       dialog.querySelector('.action-button').href = card.querySelector('.action-button').href;
+      const origin = source.querySelector('img').getBoundingClientRect();
       dialog.showModal();
+      if (!reduceMotion.matches &&
+          origin.bottom > 0 && origin.top < innerHeight && origin.width > 0) {
+        const target = photo.getBoundingClientRect();
+        if (target.width && target.height) {
+          const start = `translate(${origin.left-target.left}px,${origin.top-target.top}px) scale(${origin.width/target.width},${origin.height/target.height})`;
+          const end = 'translate(0,0) scale(1)';
+          if (animatePhoto) {
+            animatePhoto(photo, { transform:[start,end], transformOrigin:'top left' },
+              { duration:.38, ease:[.22,1,.36,1] });
+          } else {
+            photo.animate([{ transform:start, transformOrigin:'top left' }, { transform:end, transformOrigin:'top left' }],
+              { duration:380, easing:'cubic-bezier(.22,1,.36,1)' });
+          }
+        }
+      }
       dialog.addEventListener('close', () => details.focus({ preventScroll:true }), { once:true });
     });
     card.querySelector('.vehicle-media img').addEventListener('click', () => details.click());
   });
 
-  dialog.addEventListener('click', event => {
-    if (event.target !== dialog) return;
-    const bounds = dialog.getBoundingClientRect();
-    if (event.clientX < bounds.left || event.clientX > bounds.right ||
-        event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
+  const compare = document.querySelector('#compareDialog');
+  const compareOpen = document.querySelector('.compare-open');
+  const selectors = [...compare.querySelectorAll('select')];
+  const models = new Map(cards.map(card => [card.dataset.id, card]));
+  const formatUSD = new Intl.NumberFormat('ru-BY', { maximumFractionDigits:0 });
+  let previousChoices = [];
+  let previousFavorites = '';
+
+  function renderComparison(changedIndex) {
+    const pair = selectors.map(select => models.get(select.value));
+    previousChoices = pair.map(card => card.dataset.id);
+    const headers = compare.querySelectorAll('thead th[scope="col"]');
+    const pictures = compare.querySelectorAll('.compare-pictures img');
+    const rows = compare.querySelectorAll('tbody tr');
+
+    pair.forEach((card, index) => {
+      const opposite = selectors[1 - index].value;
+      for (const option of selectors[index].options) option.disabled = option.value === opposite;
+      const { name, body, fuel } = card.dataset;
+      headers[index].textContent = name;
+      const img = pictures[index];
+      const source = card.querySelector('.vehicle-media img');
+      img.src = source.currentSrc || source.src;
+      img.parentElement.classList.toggle('is-cutout', !!card.querySelector('.vehicle-media--cutout'));
+      img.parentElement.classList.toggle('is-photo', !!card.querySelector('.vehicle-media--photo'));
+      if (index === changedIndex && !reduced.matches) {
+        img.getAnimations().forEach(animation => animation.cancel());
+        img.animate([{ opacity:.35, translate:'8px 0' }, { opacity:1, translate:'0 0' }],
+          { duration:320, easing:'cubic-bezier(.2,.75,.23,1)' });
+      }
+      const condition = card.querySelector('.vehicle-kicker').textContent.split('·').slice(1).join('·').trim();
+      const values = [card.querySelector('.vehicle-budget strong').textContent, body, fuel, condition];
+      rows.forEach((row, i) => { row.cells[index + 1].textContent = values[i]; });
+    });
+    const difference = Number(pair[0].dataset.price) - Number(pair[1].dataset.price);
+    compare.querySelector('.compare-difference').textContent = difference
+      ? 'Ориентир для ' + pair[difference < 0 ? 0 : 1].dataset.name + ' ниже примерно на ' + formatUSD.format(Math.abs(difference)) + ' USD.'
+      : 'У обеих моделей одинаковый ориентир привоза.';
+    const message = 'Здравствуйте, Дмитрий! Помогите выбрать между ' + pair[0].dataset.name + ' и ' + pair[1].dataset.name + '.';
+    compare.querySelector('.compare-contact').href = 'https://t.me/dmittrixx?text=' + encodeURIComponent(message);
+  }
+
+  compareOpen.hidden = false;
+  compareOpen.addEventListener('click', () => {
+    const favorites = cards.filter(card => saved.has(card.dataset.id));
+    const signature = JSON.stringify(favorites.map(card => card.dataset.id));
+    const defaults = [...new Set([...favorites, ...cards.filter(card => !card.hidden), ...cards])];
+    const chosen = previousChoices.length && signature === previousFavorites ? previousChoices :
+      defaults.slice(0, 2).map(card => card.dataset.id);
+    previousFavorites = signature;
+    selectors.forEach((select, index) => {
+      select.replaceChildren();
+      for (const [label, group] of [['Избранное', favorites], ['Каталог', cards.filter(card => !saved.has(card.dataset.id))]]) {
+        if (!group.length) continue;
+        const options = document.createElement('optgroup');
+        options.label = label;
+        group.forEach(card => options.append(new Option(card.dataset.name, card.dataset.id)));
+        select.append(options);
+      }
+      select.value = chosen[index];
+    });
+    renderComparison();
+    compare.showModal();
   });
+  selectors.forEach((select,index) => select.addEventListener('change', () => renderComparison(index)));
+
+  [dialog, compare].forEach(modal => modal.addEventListener('click', event => {
+    if (event.target !== modal) return;
+    const bounds = modal.getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX > bounds.right ||
+        event.clientY < bounds.top || event.clientY > bounds.bottom) modal.close();
+  }));
 
   picker.hidden = false;
   brands.forEach(button => button.addEventListener('click', () => {

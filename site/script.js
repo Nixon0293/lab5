@@ -345,7 +345,7 @@
 
   function runCounter(el) {
     var end = parseFloat(el.getAttribute("data-count"));
-    if (reduceMotion) { el.innerHTML = counterHTML(el, end); return; }
+    if (reduceMotion || el.closest("#achievements")) { el.innerHTML = counterHTML(el, end); return; }
     var duration = 2000;
     var start = null;
     function step(ts) {
@@ -358,7 +358,7 @@
     requestAnimationFrame(step);
   }
 
-  $$("[data-count]").forEach(function (el) { el.innerHTML = counterHTML(el, 0); });
+  $$("[data-count]").forEach(function (el) { el.innerHTML = counterHTML(el, el.closest("#achievements") ? Number(el.dataset.count) : 0); });
 
   var inTargets = $$(".reveal, .split");
   if ("IntersectionObserver" in window) {

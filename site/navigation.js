@@ -10,6 +10,8 @@
     menu.setAttribute('aria-expanded', String(open));
     menu.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
     document.body.classList.toggle('navigation-open', open);
+    nav.inert = mobile.matches && !open;
+    if (open) nav.querySelector('a').focus({ preventScroll: true });
   }
 
   menu.addEventListener('click', () => setOpen(!nav.classList.contains('is-open')));
@@ -30,6 +32,13 @@
     setOpen(false);
     menu.focus();
   });
+  document.addEventListener('pointerdown', event => {
+    if (nav.classList.contains('is-open') && !header.contains(event.target)) setOpen(false);
+  });
+  header.addEventListener('focusout', event => {
+    if (event.relatedTarget && !header.contains(event.relatedTarget) && nav.classList.contains('is-open')) setOpen(false);
+  });
+  setOpen(false);
   mobile.addEventListener('change', () => setOpen(false));
   addEventListener('pageshow', () => setOpen(false));
 })();

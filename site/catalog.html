@@ -1,5 +1,6 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a0a0a"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261118-2"><link rel="stylesheet" href="pages.css"><title>Каталог автомобилей — Дмитрий Некрашевич</title><meta name="description" content="Каталог автомобилей для подбора: Geely, BELGEE, HAVAL, BMW и Audi. Ориентиры привоза в долларах США."><link rel="stylesheet" href="studio.css?v=20261116">
-<link rel="stylesheet" href="refined.css?v=spacing1">
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a0a0a"><link rel="stylesheet" href="style.css?v=local-type1"><link rel="stylesheet" href="pages.css"><title>Каталог автомобилей — Дмитрий Некрашевич</title><meta name="description" content="Каталог автомобилей для подбора: Geely, BELGEE, HAVAL, BMW и Audi. Ориентиры привоза в долларах США."><link rel="stylesheet" href="studio.css?v=20261116">
+<link rel="stylesheet" href="refined.css?v=studio-nav4">
+<link rel="stylesheet" href="catalog-finish.css?v=compare1">
 </head><body class="inner-page"><a class="skip-link" href="#main">К содержимому</a><header class="header" id="header">
     <a href="index.html#home" class="logo" aria-label="На главную">
       <span class="logo__mark" aria-hidden="true">
@@ -35,7 +36,7 @@
   </header><main id="main" class="page-main"><section class="page-intro catalog-intro">
   <div>
     <span class="eyebrow">Подбор автомобилей</span>
-    <h1>Найдём <em>ваше авто.</em></h1>
+    <h1>Найдём <em>ваше авто</em></h1>
     <p>17 моделей с ориентиром привоза в долларах. Выберите подходящий вариант, а я помогу найти и проверить конкретный автомобиль.</p>
     <a class="catalog-jump" href="#models">Смотреть модели <span aria-hidden="true">↓</span></a>
   </div>
@@ -44,7 +45,7 @@
 <section class="catalog-section" id="models" aria-label="Каталог">
 <h2 class="catalog-section-title">Выберите модель</h2>
 <div class="brand-picker" role="group" aria-label="Быстрый выбор марки" hidden><button type="button" data-brand-filter="" aria-pressed="true">Все марки</button><button type="button" data-brand-filter="Geely" aria-pressed="false">Geely</button><button type="button" data-brand-filter="BELGEE" aria-pressed="false">BELGEE</button><button type="button" data-brand-filter="HAVAL" aria-pressed="false">HAVAL</button><button type="button" data-brand-filter="BMW" aria-pressed="false">BMW</button><button type="button" data-brand-filter="Audi" aria-pressed="false">Audi</button></div><details class="filter-disclosure" open><summary>Все фильтры</summary><form id="filters" class="filter-bar"><label class="model-search" for="modelSearch">Модель<input id="modelSearch" type="search" placeholder="Модель или марка"></label><label>Марка<select id="brand"><option value="">Все марки</option><option>Geely</option><option>BELGEE</option><option>HAVAL</option><option>BMW</option><option>Audi</option></select></label><label>Кузов<select id="body"><option value="">Любой кузов</option><option>Кроссовер</option><option>Седан</option><option>Хетчбэк</option></select></label><label>Двигатель<select id="fuel"><option value="">Любой</option><option>Бензин</option><option>Электро</option><option>Дизель</option><option>Гибрид</option></select></label><label>Бюджет до, USD<input id="budget" type="number" min="0" step="500" placeholder="Без ограничений"></label><button type="reset" class="reset-filters">Сбросить ↺</button></form></details>
-<div class="catalog-toolbar"><p id="results" role="status">17 моделей</p><label class="favorite-filter"><input type="checkbox" id="onlySaved"> Только избранное ♡</label><label class="sort-label"><span class="sr-only">Сортировка</span><select id="sort"><option value="default">По умолчанию</option><option value="asc">Сначала дешевле</option><option value="desc">Сначала дороже</option><option value="name">По названию</option></select></label></div><div class="vehicle-grid">
+<div class="catalog-toolbar"><p id="results" role="status">17 моделей</p><button class="compare-open" type="button" aria-haspopup="dialog" aria-controls="compareDialog" hidden>Сравнить модели <span aria-hidden="true">⇄</span></button><label class="favorite-filter"><input type="checkbox" id="onlySaved"> Только избранное ♡</label><label class="sort-label"><span class="sr-only">Сортировка</span><select id="sort"><option value="default">По умолчанию</option><option value="asc">Сначала дешевле</option><option value="desc">Сначала дороже</option><option value="name">По названию</option></select></label></div><div class="vehicle-grid">
 <article class="vehicle" data-id="geely-monjaro" data-brand="Geely" data-body="Кроссовер" data-fuel="Бензин" data-price="29500" data-name="Geely Monjaro" data-description="Среднеразмерный кроссовер для повседневных поездок и дальних дорог.">
   <div class="vehicle-media">
     <img src="img/geely-monjaro.webp" alt="Geely Monjaro" loading="lazy" decoding="async">
@@ -321,6 +322,31 @@
   <summary>Как рассчитаны цены</summary>
   <p>Все суммы в USD округлены до 100 долларов. Для новых Geely, BELGEE и HAVAL указан предварительный бюджет, рассчитанный по правилу −20% от розничных цен в Беларуси. Для BMW и Audi показана медиана опубликованных оценок привоза до Минска из Китая и Кореи по выборкам от 5 и 22 октября 2026 года соответственно. Пересчёт по курсу 3,0026 BYN за 1 USD на 15 ноября 2026 года. Итог зависит от года выпуска, комплектации, состояния, курса, доставки и таможенных платежей. На фото показаны модели, которые могут отличаться от конкретного варианта подбора.</p>
 </details></section><section class="page-cta"><span class="eyebrow">НЕ НАШЛИ СВОЮ МОДЕЛЬ?</span><h2>Найдём именно <em>вашу.</em></h2><a href="mailto:nixon0293@gmail.com" class="action-button">Обсудить подбор ↗</a></section></main>
+<dialog class="compare-dialog" id="compareDialog" aria-labelledby="compareTitle">
+  <header class="compare-header">
+    <h2 id="compareTitle">Сравнение моделей</h2>
+    <form method="dialog"><button class="compare-close" type="submit" aria-label="Закрыть сравнение" autofocus>×</button></form>
+  </header>
+  <div class="compare-body">
+    <div class="compare-pair">
+      <label>Первая модель<select id="compareFirst"></select></label>
+      <label>Вторая модель<select id="compareSecond"></select></label>
+    </div>
+    <div class="compare-pictures" aria-hidden="true"><figure><img alt=""></figure><figure><img alt=""></figure></div>
+    <table class="compare-specs">
+      <caption class="sr-only">Характеристики выбранных моделей</caption>
+      <thead class="sr-only"><tr><th>Параметр</th><th scope="col"></th><th scope="col"></th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Бюджет привоза</th><td></td><td></td></tr>
+        <tr><th scope="row">Кузов</th><td></td><td></td></tr>
+        <tr><th scope="row">Двигатель</th><td></td><td></td></tr>
+        <tr><th scope="row">Состояние и год</th><td></td><td></td></tr>
+      </tbody>
+    </table>
+    <p class="compare-difference" role="status"></p>
+    <a class="action-button compare-contact">Обсудить обе модели в Telegram ↗</a>
+  </div>
+</dialog>
 <dialog class="model-dialog" aria-labelledby="modelTitle">
   <form method="dialog"><button class="model-close" aria-label="Закрыть карточку" autofocus>×</button></form>
   <figure class="vehicle-media model-media"><img class="model-photo" alt=""></figure>
@@ -332,4 +358,4 @@
     <p class="model-note">Фото иллюстрирует модель. Итоговая стоимость зависит от конкретного автомобиля и маршрута доставки.</p>
     <a class="action-button">Подобрать в Telegram ↗</a>
   </div>
-</dialog><footer class="site-footer"><span>© 2026 Дмитрий Некрашевич</span><a href="index.html">На главную ↗</a><a href="mailto:nixon0293@gmail.com">nixon0293@gmail.com</a><a href="https://t.me/dmittrixx">Telegram @dmittrixx ↗</a></footer><script src="pages.js?v=20261118-5"></script><script src="effects.js?v=20261118"></script><script src="studio.js?v=20261118-5"></script><script src="navigation.js?v=20261118"></script><script src="quick-budget.js"></script></body></html>
+</dialog><footer class="site-footer"><span>© 2026 Дмитрий Некрашевич</span><a href="index.html">На главную ↗</a><a href="mailto:nixon0293@gmail.com">nixon0293@gmail.com</a><a href="https://t.me/dmittrixx">Telegram @dmittrixx ↗</a></footer><script src="vendor/motion.js"></script><script src="pages.js?v=submit-final"></script><script src="effects.js?v=20261118"></script><script src="studio.js?v=drive-studio2"></script><script src="navigation.js?v=studio-nav4"></script><script src="quick-budget.js"></script></body></html>

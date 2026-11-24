@@ -1,0 +1,72 @@
+.compare-open, .compare-close {
+  border: 1px solid #a78d7866;
+  color: #ffdfc8;
+  background: #28231f;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.compare-open { padding: 9px 14px; font-size: 13px; font-weight: 700; }
+.compare-open span { margin-inline-start: 5px; color: var(--orange); }
+.compare-open:hover, .compare-close:hover { background: #3c3028; }
+.compare-close { width: 44px; height: 44px; font: 28px/1 system-ui; }
+body:has(.compare-dialog[open]) { overflow: hidden; }
+.compare-dialog {
+  color-scheme: dark;
+  padding: 0;
+  margin: auto;
+  width: min(690px, calc(100% - 28px));
+  max-height: min(90dvh, 810px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid #54483e;
+  border-radius: 20px;
+  background: #1b1918;
+  color: #f7f1e8;
+  box-shadow: 0 28px 100px #0009;
+}
+.compare-dialog::backdrop { background: #0e0d0bcf; backdrop-filter: blur(6px); }
+.compare-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px clamp(14px, 3vw, 26px);
+  background: #22201d;
+  border-bottom: 1px solid #393530;
+}
+.compare-header h2 { font: 600 clamp(23px, 3vw, 32px)/1.25 var(--display); margin: 0; }
+.compare-body { padding: clamp(14px, 3vw, 26px); }
+.compare-pair, .compare-pictures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(8px, 2vw, 16px); }
+.compare-pair label { display: grid; gap: 6px; color: #d3c6ba; font-size: 12px; }
+.compare-pair select {
+  min-width: 0; width: 100%; height: 44px; padding: 0 7px;
+  color: #f7f1e8; border: 1px solid #60554c; border-radius: 7px;
+  background: #25221f; font: inherit; font-weight: 700;
+}
+.compare-pictures { margin: 12px 0; }
+.compare-pictures figure { margin: 0; border-radius: 9px; overflow: hidden; aspect-ratio: 1.95; background: #272525; }
+.compare-pictures img { display: block; height: 100%; width: 100%; object-fit: contain; }
+.compare-pictures .is-photo img { object-fit: cover; object-position: center 58%; }
+.compare-pictures .is-cutout { background: radial-gradient(ellipse at 50% 70%, #49423b, #292624); }
+.compare-specs { width: 100%; border-collapse: collapse; font-size: 14px; }
+.compare-specs tbody tr {
+  display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); column-gap: clamp(8px,2vw,16px);
+  padding: 9px 0; border-bottom: 1px solid #3b3631;
+}
+.compare-specs th { grid-column: 1 / -1; text-align: left; margin-bottom: 4px; color: #c2b7ac; font-size: 11px; font-weight: 500; }
+.compare-specs td { line-height: 1.4; font-weight: 600; font-variant-numeric: tabular-nums; }
+.compare-specs tbody tr:first-child td { font: 600 clamp(17px, 2.5vw, 24px)/1.35 var(--display); }
+.compare-difference { margin: 15px 0; color: #ffd3b2; font-size: 14px; }
+.compare-contact { justify-content: center; white-space: normal; text-align: center; }
+@media (max-width: 630px) {
+  .catalog-toolbar { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 8px; }
+  .catalog-toolbar > .compare-open, .catalog-toolbar > .sort-label { justify-self: end; }
+  .catalog-toolbar .sort-label select { max-width: 100%; }
+  .compare-contact { width: 100%; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .compare-dialog[open] { animation: compare-in .33s cubic-bezier(.2,.8,.2,1); }
+  .compare-dialog[open]::backdrop { animation: compare-backdrop-in .3s ease; }
+  @keyframes compare-in { from { opacity: .15; transform: translateY(18px) scale(.98); } to { opacity: 1; transform: none; } }
+  @keyframes compare-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+}

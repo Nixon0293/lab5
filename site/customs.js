@@ -1,43 +1,172 @@
-(function(){
- 'use strict';
- const form=document.querySelector('#customsForm'),q=id=>document.getElementById(id),core=window.CustomsCore;
- const fmt=(v,d=2)=>new Intl.NumberFormat('ru-BY',{maximumFractionDigits:d,minimumFractionDigits:d}).format(v);
- const outputs=['total','dutyByn','dutyEur','recyclingOut','feeOut','otherOut'];
- let rateSource='НБРБ',rateDate='2026-11-15',usdDate='2026-11-15',controller;
- function invalidate(message){q('customsError').textContent=message;outputs.forEach(id=>q(id).textContent='—');q('totalByn').textContent='Расшифровка ниже — в BYN.';q('formula').textContent='Заполните корректные данные для расчёта.';document.querySelector('.customs-result').classList.add('is-invalid');}
- function calculate(){
-  if(!form.checkValidity()){invalidate('Проверьте даты и положительные значения полей. Объём двигателя укажите целым числом в см³.');return;}
-  if(q('engine').value==='other'){invalidate('Для электромобилей и гибридов нужен отдельный расчёт с учётом типа силовой установки и условий ввоза. Свяжитесь с Дмитрием.');return;}
-  try{
-   const age=core.ages(q('made').value,q('importDate').value);
-   const value=+q('customsValue').value,cc=+q('cc').value,rate=+q('eurRate').value;
-   if(rateDate!==q('importDate').value||usdDate!==q('importDate').value)throw new Error('Получите курс НБРБ на дату оформления или введите подтверждённый курс вручную.');
-   const duty=core.duty({age:age.dutyAge,cc,value});
-   const dutyByn=core.money(duty.amount*rate),recycling=+q('recyclingFee').value,fee=+q('customsFee').value,other=+q('otherFees').value,total=core.money(dutyByn+recycling+fee+other);
-   q('total').textContent=fmt(core.money(total/+q('usdRate').value));q('totalByn').textContent='Эквивалент: '+fmt(total)+' BYN · 1 USD = '+q('usdRate').value+' BYN';q('dutyByn').textContent=fmt(dutyByn)+' BYN';q('dutyEur').textContent=fmt(duty.amount)+' €';q('recyclingOut').textContent=fmt(recycling)+' BYN';q('feeOut').textContent=fmt(fee)+' BYN';q('otherOut').textContent=fmt(other)+' BYN';
-   q('formula').textContent=duty.percent?'Максимум из '+fmt(value)+' € × '+Math.round(duty.percent*100)+'% и '+fmt(cc,0)+' см³ × '+fmt(duty.perCC,1)+' €/см³ = '+fmt(duty.amount)+' €':fmt(cc,0)+' см³ × '+fmt(duty.perCC,1)+' €/см³ = '+fmt(duty.amount)+' €';
-   q('dutyBar').style.flex=String(dutyByn/Math.max(total,1));q('recycleBar').style.flex=String(recycling/Math.max(total,1));q('feesBar').style.flex=String((fee+other)/Math.max(total,1));
-   q('customsError').textContent=q('importDate').value!=='2026-11-15'?'Сборы заданы по состоянию на 15.11.2026. Для выбранной даты уточните их размер и измените поля при необходимости.':'';
-   document.querySelector('.customs-result').classList.remove('is-invalid');
-  }catch(error){invalidate(error.message);}
- }
- function setRecycling(){try{q('recyclingFee').value=core.ages(q('made').value,q('importDate').value).recycling;}catch{}}
- form.addEventListener('submit',e=>{e.preventDefault();calculate();if(!form.checkValidity())form.reportValidity();});
- form.addEventListener('input',e=>{
-  if(e.target.id==='made'||e.target.id==='importDate')setRecycling();
-  if(e.target.id==='importDate'){form.querySelector('.customs-advanced').open=true;q('eurRate').value='';q('usdRate').value='';rateDate='';usdDate='';q('usdRateStatus').textContent='Введите курс USD на выбранную дату или получите его из НБРБ.';q('rateStatus').textContent='Получите курс на выбранную дату или введите его вручную.';}
-  if(e.target.id==='usdRate'){usdDate=q('importDate').value;q('usdRateStatus').textContent='Ручной ввод · 1 USD = '+q('usdRate').value+' BYN';}
-  if(e.target.id==='eurRate'){rateSource='Ручной ввод';rateDate=q('importDate').value;q('rateStatus').textContent='Ручной ввод · 1 EUR = '+q('eurRate').value+' BYN';}
+(function () {
+  'use strict';
+
+  const field = id => document.getElementById(id);
+  const form = field('customsForm');
+  const result = field('customsResult');
+  const discuss = field('discussResult');
+  const refresh = field('refreshRate');
+  const inputs = [...form.querySelectorAll('input')];
+  const amountIds = ['total', 'dutyByn', 'dutyEur', 'recyclingOut', 'feeOut', 'otherOut'];
+  const barIds = ['dutyBar', 'recycleBar', 'feesBar', 'otherBar'];
+  const dateOfFees = '2026-11-15';
+  const rateDates = { eurRate: dateOfFees, usdRate: dateOfFees };
+  const telegram = 'https://t.me/dmittrixx';
+  const formats = [0, 1, 2].map(digits => new Intl.NumberFormat('ru-BY', {
+    minimumFractionDigits: digits, maximumFractionDigits: digits
+  }));
+  const fmt = (value, digits = 2) => formats[digits].format(value);
+  const dateLabel = iso => iso.split('-').reverse().join('.');
+  const core = window.CustomsCore;
+  let activeRequest;
+
+  function invalidate(message) {
+    result.classList.add('is-invalid');
+    for (const id of barIds) field(id).style.flexGrow = '0';
+    for (const id of amountIds) field(id).textContent = '—';
+    field('customsError').textContent = message;
+    field('totalByn').textContent = 'Расчёт пока недоступен.';
+    field('formula').textContent = message;
+    discuss.href = telegram;
+    discuss.textContent = 'Задать вопрос в Telegram ↗';
+    field('draftHint').hidden = true;
+  }
+
+  function calculate() {
+    const made = field('made').value;
+    const imported = field('importDate').value;
+    const cc = field('cc').valueAsNumber;
+    const value = field('customsValue').valueAsNumber;
+    const euros = field('eurRate').valueAsNumber;
+    const dollars = field('usdRate').valueAsNumber;
+    const invalid = inputs.filter(input => !input.validity.valid);
+    inputs.forEach(input => input.setAttribute('aria-invalid', String(invalid.includes(input))));
+
+    try {
+      if (field('engine').value === 'other') {
+        throw new Error('Для электромобилей и гибридов нужен индивидуальный расчёт. Напишите Дмитрию, чтобы уточнить условия ввоза.');
+      }
+      if (invalid.length) {
+        const input = invalid[0];
+        const label = input.labels[0].firstChild.textContent.trim();
+        throw new Error('Проверьте поле «' + label + '». ' + input.validationMessage);
+      }
+      const age = core.ages(made, imported);
+      if (rateDates.eurRate !== imported || rateDates.usdRate !== imported) {
+        throw new Error('Получите курсы НБРБ на дату оформления или введите их вручную.');
+      }
+      const duty = core.duty({ age: age.dutyAge, cc, value });
+      const amounts = [
+        core.money(duty.amount * euros), field('recyclingFee').valueAsNumber,
+        field('customsFee').valueAsNumber, field('otherFees').valueAsNumber
+      ];
+      const total = core.money(amounts.reduce((sum, amount) => sum + amount, 0));
+      const usd = fmt(core.money(total / dollars));
+      const amountsOut = ['dutyByn', 'recyclingOut', 'feeOut', 'otherOut'];
+
+      amounts.forEach((amount, index) => {
+        field(amountsOut[index]).textContent = fmt(amount) + ' BYN';
+        field(barIds[index]).style.flex = String(amount / total);
+      });
+      field('dutyEur').textContent = fmt(duty.amount) + ' €';
+      field('total').textContent = usd;
+      field('totalByn').textContent = fmt(total) + ' BYN · 1 USD = ' + field('usdRate').value.replace('.', ',') + ' BYN';
+      const perVolume = fmt(cc, 0) + ' см³ × ' + fmt(duty.perCC, 1) + ' €/см³';
+      const percent = fmt(value) + ' € × ' + Math.round(duty.percent * 100) + '%';
+      field('formula').textContent = (duty.percent ? 'Максимум из ' + percent + ' и ' : '') +
+        perVolume + ' = ' + fmt(duty.amount) + ' €';
+      field('customsError').textContent = imported === dateOfFees ? '' :
+        'Сборы указаны на 15.11.2026. Уточните их размер на выбранную дату.';
+      const draft = 'Здравствуйте, Дмитрий! Хочу уточнить расчёт ввоза автомобиля.\n' +
+        'Дата выпуска — ' + dateLabel(made) + ', оформление — ' + dateLabel(imported) + '.\n' +
+        'Двигатель — бензин / дизель, ' + fmt(cc, 0) + ' см³. Таможенная стоимость — ' + fmt(value) + ' €.\n' +
+        'Предварительные платежи — ' + usd + ' USD (' + fmt(total) + ' BYN).';
+      discuss.href = telegram + '?text=' + encodeURIComponent(draft);
+      discuss.textContent = 'Обсудить расчёт в Telegram ↗';
+      field('draftHint').hidden = false;
+      result.classList.remove('is-invalid');
+      return true;
+    } catch (error) {
+      invalidate(error.message);
+      return false;
+    }
+  }
+
+  function cancelRequest() {
+    activeRequest?.abort();
+    activeRequest = null;
+    refresh.disabled = false;
+  }
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    if (calculate()) result.focus();
+  });
+
+  form.addEventListener('input', event => {
+    const id = event.target.id;
+    const imported = field('importDate').value;
+    if (id === 'made' || id === 'importDate') {
+      try { field('recyclingFee').value = core.ages(field('made').value, imported).recycling; } catch {}
+    }
+    if (id === 'importDate') {
+      cancelRequest();
+      form.querySelector('.customs-advanced').open = true;
+      for (const key of Object.keys(rateDates)) {
+        field(key).value = '';
+        rateDates[key] = '';
+      }
+      field('rateStatus').textContent = 'Введите курс EUR на выбранную дату или получите его из НБРБ.';
+      field('usdRateStatus').textContent = 'Введите курс USD на выбранную дату или получите его из НБРБ.';
+    }
+    if (id === 'eurRate' || id === 'usdRate') {
+      cancelRequest();
+      rateDates[id] = imported;
+      field(id === 'eurRate' ? 'rateStatus' : 'usdRateStatus').textContent = 'Ручной ввод на ' + dateLabel(imported);
+      if (field('rateStatus').textContent.startsWith('Получаю')) field('rateStatus').textContent = 'Проверьте курс EUR на выбранную дату.';
+    }
+    calculate();
+  });
+
+  async function fetchRate(currency, date, signal) {
+    const response = await fetch('https://api.nbrb.by/exrates/rates/' + currency +
+      '?parammode=2&ondate=' + encodeURIComponent(date), { signal });
+    if (!response.ok) throw new Error();
+    const data = await response.json();
+    if (!Number.isFinite(data.Cur_OfficialRate) || data.Cur_OfficialRate <= 0 ||
+        !(data.Cur_Scale > 0) || !data.Date?.startsWith(date)) throw new Error();
+    return (data.Cur_OfficialRate / data.Cur_Scale).toFixed(4);
+  }
+
+  refresh.addEventListener('click', async () => {
+    const date = field('importDate').value;
+    if (!date) return;
+    cancelRequest();
+    const request = new AbortController();
+    activeRequest = request;
+    const timer = setTimeout(() => request.abort(), 10000);
+    refresh.disabled = true;
+    field('rateStatus').textContent = 'Получаю официальные курсы НБРБ…';
+    try {
+      const currencies = ['EUR', 'USD'];
+      const rates = await Promise.all(currencies.map(currency => fetchRate(currency, date, request.signal)));
+      if (request !== activeRequest) return;
+      currencies.forEach((currency, index) => {
+        const id = currency.toLowerCase() + 'Rate';
+        field(id).value = rates[index];
+        rateDates[id] = date;
+        field(index ? 'usdRateStatus' : 'rateStatus').textContent = 'НБРБ, ' + dateLabel(date) +
+          ' · 1 ' + currency + ' = ' + rates[index].replace('.', ',') + ' BYN';
+      });
+      calculate();
+    } catch {
+      if (request === activeRequest) field('rateStatus').textContent =
+        'Не удалось получить курсы. Проверьте их на сайте НБРБ и введите вручную.';
+    } finally {
+      clearTimeout(timer);
+      if (request === activeRequest) cancelRequest();
+    }
+  });
+
   calculate();
- });
- form.addEventListener('change',calculate);
- q('refreshRate').addEventListener('click',async()=>{
-  const date=q('importDate').value,button=q('refreshRate');if(!date)return;
-  controller?.abort();controller=new AbortController();const timer=setTimeout(()=>controller.abort(),10000);
-  button.disabled=true;q('rateStatus').textContent='Получаю официальный курс НБРБ…';
-  try{const response=await fetch('https://api.nbrb.by/exrates/rates/EUR?parammode=2&ondate='+encodeURIComponent(date),{signal:controller.signal});if(!response.ok)throw new Error();const data=await response.json();if(!Number.isFinite(data.Cur_OfficialRate)||!(data.Cur_Scale>0)||!data.Date?.startsWith(date))throw new Error();const usdResponse=await fetch('https://api.nbrb.by/exrates/rates/USD?parammode=2&ondate='+encodeURIComponent(date),{signal:controller.signal});if(!usdResponse.ok)throw new Error();const dollar=await usdResponse.json();if(!Number.isFinite(dollar.Cur_OfficialRate)||!(dollar.Cur_Scale>0)||!dollar.Date?.startsWith(date))throw new Error();if(date!==q('importDate').value)return;q('usdRate').value=(dollar.Cur_OfficialRate/dollar.Cur_Scale).toFixed(4);usdDate=date;q('usdRateStatus').textContent='НБРБ, '+date.split('-').reverse().join('.')+' · 1 USD = '+q('usdRate').value+' BYN';q('eurRate').value=(data.Cur_OfficialRate/data.Cur_Scale).toFixed(4);rateDate=date;rateSource='НБРБ';q('rateStatus').textContent='НБРБ, '+date.split('-').reverse().join('.')+' · 1 EUR = '+q('eurRate').value+' BYN';calculate();}
-  catch{q('rateStatus').textContent='Не удалось получить курс. Проверьте его на сайте НБРБ и введите вручную.';}
-  finally{clearTimeout(timer);button.disabled=false;}
- });
- calculate();
 })();

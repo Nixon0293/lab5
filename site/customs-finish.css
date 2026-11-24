@@ -1,0 +1,50 @@
+.customs-intro > p { max-width: 56ch; }
+.customs-layout > *, .customs-form label { min-width: 0; }
+.customs-form .input-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.customs-form label { font-size: .8rem; line-height: 1.45; }
+.customs-form label small, .customs-form .input-message { font-size: .76rem; line-height: 1.5; }
+.customs-form label small { color: #bbb0a8; }
+.customs-form [aria-invalid="true"] { border-color: #ff8960; }
+.customs-form .input-message:empty { display: none; }
+.customs-advanced summary { padding-block: .3rem; }
+.customs-advanced summary:focus-visible, #customsResult:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 4px;
+}
+.customs-result {
+  --duty: #ff7545;
+  --recycling: #f5ab71;
+  --fees: #e4d5bd;
+  --other: #a59c96;
+  scroll-margin-block-start: 1rem;
+}
+.customs-result .cost-bars { height: 8px; gap: 0; }
+.cost-bars #dutyBar, #dutyByn::before { background-color: var(--duty); }
+.cost-bars #recycleBar, #recyclingOut::before { background-color: var(--recycling); }
+.cost-bars #feesBar, #feeOut::before { background-color: var(--fees); }
+.cost-bars #otherBar, #otherOut::before { background-color: var(--other); }
+.customs-result .cost-bars i { min-width: 0; }
+.customs-result.is-invalid .cost-bars { visibility: hidden; }
+.breakdown dd { white-space: nowrap; }
+.breakdown dd:not(#dutyEur)::before {
+  content: '';
+  display: inline-block;
+  width: .43em;
+  height: .43em;
+  border-radius: 50%;
+  margin-inline-end: .55em;
+  vertical-align: .17em;
+}
+.customs-result .formula { overflow-wrap: anywhere; }
+.customs-result .draft-hint { color: #c4b7ae; font-size: .76rem; line-height: 1.5; margin: .65rem 0 0; }
+@media (max-width: 640px) {
+  .customs-form input, .customs-form select { font-size: 16px; }
+  .customs-result .action-button { width: 100%; justify-content: center; }
+}
+@media (max-width: 450px) {
+  .customs-form .input-pair { grid-template-columns: minmax(0,1fr); }
+  .customs-result .breakdown > div { gap: .6rem; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .customs-result .cost-bars i { transition: flex-grow .42s cubic-bezier(.2,.7,.3,1); }
+}

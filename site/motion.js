@@ -1,94 +1,96 @@
-/* One time-based animation loop for both driving scenes. No external libraries. */
+/* Both cars share the same photographed body and wheel geometry. */
 (function () {
   'use strict';
+  const hero = document.querySelector('.drive-scene--hero');
+  const route = document.querySelector('#roadshow');
+  const journey = route.querySelector('.drive-scene--journey');
+  const sticky = route.querySelector('.roadshow__sticky');
+  const stages = [...route.querySelectorAll('.journey-stage')];
+  const meter = route.querySelector('.journey-distance b');
+  const heroCar = hero.querySelector('.drive-car');
+  const routeCar = journey.querySelector('.drive-car');
   const preference = matchMedia('(prefers-reduced-motion: reduce)');
-  const scenes = [...document.querySelectorAll('.drive-scene')];
-  const section = document.querySelector('#roadshow');
-  const sticky = section.querySelector('.roadshow__sticky');
-  const stages = [...section.querySelectorAll('.journey-stage')];
-  const meter = section.querySelector('.journey-distance b');
-  const button = document.querySelector('.motion-toggle');
-  let paused = false, frame = 0, last = 0, clock = 0, distance = 0, progress = 0, percent = -1;
-  const visible = new Set();
-  const cars = scenes.map(scene => scene.querySelector('.drive-car'));
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => entry.isIntersecting ? visible.add(entry.target) : visible.delete(entry.target));
-    start();
-  }, {rootMargin:'100px'});
-  scenes.forEach(scene => observer.observe(scene));
-  const clamp = (x,a,b) => Math.max(a, Math.min(b,x));
-  function journeyX(scene, width, position) {
-    const margin = scene.clientWidth * .04;
-    const travel = Math.max(0, scene.clientWidth - width - margin * 2);
-    return margin + travel * clamp(position, 0, 1);
+  const duration = 1.45;
+  const clamp = value => Math.max(0, Math.min(1, value));
+  let arrival = 0;
+  let frame = 0;
+  let lastTime = 0;
+  let lastPercent = -1;
+  let heroVisible = false;
+
+  function setPosition(scene, x, distance, wheelRadius) {
+    scene.style.setProperty('--car-x', x.toFixed(2) + 'px');
+    scene.style.setProperty('--road', (-distance).toFixed(2) + 'px');
+    const degrees = distance / Math.max(wheelRadius, 1) * 180 / Math.PI;
+    scene.style.setProperty('--wheel', (degrees % 360).toFixed(2) + 'deg');
   }
-  function showProgress(position) {
-    const next = Math.floor(position * 100);
-    if (next === percent) return;
-    percent = next;
-    const current = Math.min(stages.length - 1, Math.floor(position * stages.length));
+
+  function drawHero() {
+    const t = preference.matches ? 1 : clamp(arrival / duration);
+    const distance = heroCar.offsetLeft + heroCar.offsetWidth + 24;
+    const remaining = (1 - t) ** 2.65;
+    setPosition(hero, -distance * remaining, distance * (1 - remaining), heroCar.offsetWidth * .07);
+    const brake = Math.sin(Math.PI * clamp((t - .44) / .56)) ** 2;
+    hero.style.setProperty('--pitch', (.85 * brake).toFixed(2) + 'deg');
+    hero.style.setProperty('--speed-light', (.65 * remaining).toFixed(3));
+    hero.style.setProperty('--glint', (.45 * brake).toFixed(3));
+    hero.style.setProperty('--glint-position', ((1 - t) * 100).toFixed(2) + '%');
+    hero.style.setProperty('--rim-light', (.1 * remaining).toFixed(3));
+  }
+
+  function drawRoute() {
+    const travel = Math.max(1, route.offsetHeight - sticky.offsetHeight);
+    const progress = preference.matches ? 1 : clamp(-route.getBoundingClientRect().top / (travel * .7));
+    const width = routeCar.offsetWidth;
+    const margin = journey.clientWidth * .04;
+    const distance = Math.max(0, journey.clientWidth - width - margin * 2) * progress;
+    setPosition(journey, margin + distance, distance, width * .07);
+    route.style.setProperty('--journey', progress.toFixed(4));
+    const percent = Math.floor(progress * 100);
+    if (lastPercent === percent) return;
+    lastPercent = percent;
+    const current = Math.min(stages.length - 1, Math.floor(progress * stages.length));
     stages.forEach((stage, index) => {
-      stage.classList.toggle('is-current', index === current);
-      stage.classList.toggle('is-complete', index < current);
-      if (index === current) stage.setAttribute('aria-current', 'step');
+      stage.classList.toggle('is-current', current === index);
+      stage.classList.toggle('is-complete', current > index || progress === 1);
+      stage.style.setProperty('--stage-progress', clamp(progress * stages.length - index).toFixed(3));
+      if (current === index) stage.setAttribute('aria-current', 'step');
       else stage.removeAttribute('aria-current');
     });
-    if (meter) meter.textContent = String(percent).padStart(2, '0') + '%';
+    meter.textContent = String(percent).padStart(2, '0') + '%';
   }
-  function render(dt) {
-    clock += dt;
-    const bounds = section.getBoundingClientRect();
-    const travel = Math.max(1, bounds.height - sticky.offsetHeight);
-    const target = clamp(-bounds.top / (travel * .70), 0, 1);
-    const previous = progress;
-    progress = target === 1 ? 1 : progress + (target - progress) * (1 - Math.exp(-dt * 14));
-    showProgress(progress);
-    distance += dt*175;
-    section.style.setProperty('--journey',progress.toFixed(4));
-    scenes.forEach((scene,index) => {
-      if (!visible.has(scene)) return;
-      const car = cars[index];
-      const width = car.offsetWidth;
-      let x = Math.sin(clock*.38)*12;
-      if (index) x = journeyX(scene, width, progress);
-      else x -= (scene.clientWidth*.4 + width + 24)*(1-Math.min(clock/2.8,1))**3;
-      scene.style.setProperty('--car-x',x.toFixed(2)+'px');
-      const roadDistance = index ? x - journeyX(scene, width, 0) : distance;
-      scene.style.setProperty('--road',(-roadDistance).toFixed(2)+'px');
-      const wheelDegrees = roadDistance / Math.max(width * .07, 1) * 180 / Math.PI;
-      scene.style.setProperty('--wheel', (wheelDegrees % 360).toFixed(2) + 'deg');
-      const moving = index ? Math.abs(progress - previous) > .0001 : clock < 2.8;
-      const rimLight = moving ? (Math.cos(wheelDegrees * Math.PI / 90) + 1) * .065 : 0;
-      scene.style.setProperty('--rim-light', rimLight.toFixed(3));
-      scene.style.setProperty('--bounce',(Math.sin(clock*10)*.45+Math.sin(clock*17)*.2).toFixed(2)+'px');
-      scene.style.setProperty('--pitch',clamp((progress-previous)*-65+Math.sin(clock*6)*.055,-.7,.7).toFixed(3)+'deg');
-    });
+
+  function update(now) {
+    frame = 0;
+    drawRoute();
+    const running = heroVisible && !document.hidden && !preference.matches && arrival < duration;
+    if (running && document.body.classList.contains('is-ready')) {
+      arrival = Math.min(duration, arrival + Math.min(.08, (now - lastTime) / 1000));
+    }
+    drawHero();
+    lastTime = now;
+    if (running && arrival < duration) frame = requestAnimationFrame(update);
   }
-  function tick(now) {
-    frame=0;
-    const dt=Math.min((now-last)/1000,.04); last=now;
-    if (paused || preference.matches || document.hidden || !visible.size) return;
-    if(document.body.classList.contains('is-ready')) render(dt);
-    frame=requestAnimationFrame(tick);
+
+  function schedule() {
+    if (frame || document.hidden) return;
+    lastTime = performance.now();
+    frame = requestAnimationFrame(update);
   }
-  function start() {
-    if(!frame && !paused && !preference.matches && !document.hidden && visible.size) { last=performance.now(); frame=requestAnimationFrame(tick); }
-  }
-  function staticPose() {
-    scenes.forEach((scene,index)=> {
-      const width=cars[index].offsetWidth;
-      scene.style.setProperty('--car-x',index?journeyX(scene,width,preference.matches?.5:progress)+'px':(preference.matches?'0px':-(scene.clientWidth*.4+width+24)*(1-Math.min(clock/2.8,1))**3+'px'));
-    });
-  }
-  button.addEventListener('click',()=> {
-    paused=!paused;
-    document.body.classList.toggle('motion-paused',paused);
-    button.setAttribute('aria-pressed',String(paused));
-    button.textContent=paused?'▷ Продолжить движение':'Ⅱ Пауза движения';
-    start();
+
+  new IntersectionObserver(entries => {
+    heroVisible = entries[0].isIntersecting;
+    schedule();
+  }).observe(hero);
+  new ResizeObserver(schedule).observe(sticky);
+  addEventListener('scroll', schedule, {passive:true});
+  addEventListener('resize', schedule);
+  document.addEventListener('visibilitychange', schedule);
+  preference.addEventListener('change', () => {
+    if (preference.matches) arrival = duration;
+    schedule();
   });
-  preference.addEventListener('change',()=> { staticPose(); start(); });
-  document.addEventListener('visibilitychange',start);
-  addEventListener('resize',()=> { staticPose(); });
-  staticPose(); start();
+  if (preference.matches || performance.getEntriesByType('navigation')[0]?.type === 'back_forward') arrival = duration;
+  drawHero();
+  drawRoute();
 })();
