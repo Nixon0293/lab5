@@ -127,3 +127,17 @@
   #tech .tech-grid { grid-template-columns: minmax(0, 1fr); }
   #tech .tcard__text h3 { min-block-size: 0; }
 }
+
+#home .drive-scene--hero,
+#roadshow .drive-scene--journey {
+  container-type: size;
+}
+#home .drive-scene--hero .drive-car,
+#roadshow .drive-scene--journey .drive-car {
+  max-width: 220cqh;
+}
+#tech .tcard:hover,
+#tech .tcard:hover .tcard__idx,
+#tech .tcard:hover .tcard__icon svg {
+  transform: none;
+}
