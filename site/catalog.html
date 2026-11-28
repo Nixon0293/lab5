@@ -1,7 +1,8 @@
 <!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a0a0a"><link rel="stylesheet" href="style.css?v=local-type1"><link rel="stylesheet" href="pages.css"><title>Каталог автомобилей — Дмитрий Некрашевич</title><meta name="description" content="Каталог автомобилей для подбора: Geely, BELGEE, HAVAL, BMW и Audi. Ориентиры привоза в долларах США."><link rel="stylesheet" href="studio.css?v=20261116">
 <link rel="stylesheet" href="refined.css?v=studio-nav4">
 <link rel="stylesheet" href="catalog-finish.css?v=compare1">
-</head><body class="inner-page"><a class="skip-link" href="#main">К содержимому</a><header class="header" id="header">
+<link rel="stylesheet" href="automotive.css?v=showroom">
+</head><body class="inner-page automotive"><a class="skip-link" href="#main">К содержимому</a><header class="header" id="header">
     <a href="index.html#home" class="logo" aria-label="На главную">
       <span class="logo__mark" aria-hidden="true">
         <svg viewBox="0 0 64 64" fill="none">
@@ -17,6 +18,7 @@
     <nav class="nav" id="nav" aria-label="Основное меню">
       <ul class="nav__list">
         <li><a href="index.html#home" class="nav__link" data-num="01" ><span class="roll">Главная</span></a></li>
+        <li><a href="index.html#configurator" class="nav__link">3D-студия</a></li>
         <li><a href="index.html#achievements" class="nav__link" data-num="02"><span class="roll">Достижения</span></a></li>
         <li><a href="index.html#tech" class="nav__link" data-num="03"><span class="roll">Технологии</span></a></li>
         <li><a href="index.html#cars" class="nav__link" data-num="04"><span class="roll">Галерея</span></a></li>
@@ -42,11 +44,24 @@
   </div>
   <figure class="catalog-feature"><img src="img/gallery-bmw.jpg" alt="BMW M4 на дороге" fetchpriority="high"></figure>
 </section>
+<section class="gt-feature" aria-labelledby="gt-catalog">
+  <div><p class="auto-kicker">Модель в 3D</p>
+    <h2 id="gt-catalog">Porsche Carrera GT</h2>
+    <p>Коллекционный суперкар с атмосферным V10.</p>
+    <a class="auto-button" href="index.html#configurator">Посмотреть в 3D ↗</a>
+  </div>
+  <dl class="gt-specs">
+          <div><dt>Двигатель</dt><dd>5,7 л · V10</dd></div>
+          <div><dt>Мощность</dt><dd>612 л. с.</dd></div>
+          <div><dt>0–100 км/ч</dt><dd>3,9 с</dd></div>
+          <div><dt>Макс. скорость</dt><dd>330 км/ч</dd></div>
+        </dl>
+</section>
 <section class="catalog-section" id="models" aria-label="Каталог">
 <h2 class="catalog-section-title">Выберите модель</h2>
 <div class="brand-picker" role="group" aria-label="Быстрый выбор марки" hidden><button type="button" data-brand-filter="" aria-pressed="true">Все марки</button><button type="button" data-brand-filter="Geely" aria-pressed="false">Geely</button><button type="button" data-brand-filter="BELGEE" aria-pressed="false">BELGEE</button><button type="button" data-brand-filter="HAVAL" aria-pressed="false">HAVAL</button><button type="button" data-brand-filter="BMW" aria-pressed="false">BMW</button><button type="button" data-brand-filter="Audi" aria-pressed="false">Audi</button></div><details class="filter-disclosure" open><summary>Все фильтры</summary><form id="filters" class="filter-bar"><label class="model-search" for="modelSearch">Модель<input id="modelSearch" type="search" placeholder="Модель или марка"></label><label>Марка<select id="brand"><option value="">Все марки</option><option>Geely</option><option>BELGEE</option><option>HAVAL</option><option>BMW</option><option>Audi</option></select></label><label>Кузов<select id="body"><option value="">Любой кузов</option><option>Кроссовер</option><option>Седан</option><option>Хетчбэк</option></select></label><label>Двигатель<select id="fuel"><option value="">Любой</option><option>Бензин</option><option>Электро</option><option>Дизель</option><option>Гибрид</option></select></label><label>Бюджет до, USD<input id="budget" type="number" min="0" step="500" placeholder="Без ограничений"></label><button type="reset" class="reset-filters">Сбросить ↺</button></form></details>
 <div class="catalog-toolbar"><p id="results" role="status">17 моделей</p><button class="compare-open" type="button" aria-haspopup="dialog" aria-controls="compareDialog" hidden>Сравнить модели <span aria-hidden="true">⇄</span></button><label class="favorite-filter"><input type="checkbox" id="onlySaved"> Только избранное ♡</label><label class="sort-label"><span class="sr-only">Сортировка</span><select id="sort"><option value="default">По умолчанию</option><option value="asc">Сначала дешевле</option><option value="desc">Сначала дороже</option><option value="name">По названию</option></select></label></div><div class="vehicle-grid">
-<article class="vehicle" data-id="geely-monjaro" data-brand="Geely" data-body="Кроссовер" data-fuel="Бензин" data-price="29500" data-name="Geely Monjaro" data-description="Среднеразмерный кроссовер для повседневных поездок и дальних дорог.">
+<article id="geely-monjaro" class="vehicle" data-id="geely-monjaro" data-brand="Geely" data-body="Кроссовер" data-fuel="Бензин" data-price="29500" data-name="Geely Monjaro" data-description="Среднеразмерный кроссовер для повседневных поездок и дальних дорог.">
   <div class="vehicle-media">
     <img src="img/geely-monjaro.webp" alt="Geely Monjaro" loading="lazy" decoding="async">
     <span class="vehicle-type">Бензин</span>
@@ -222,7 +237,7 @@
     </div>
   </div>
 </article>
-<article class="vehicle" data-id="haval-dargo" data-brand="HAVAL" data-body="Кроссовер" data-fuel="Бензин" data-price="25000" data-name="HAVAL Dargo" data-description="Кроссовер с высоким кузовом и выраженным внедорожным дизайном.">
+<article id="haval-dargo" class="vehicle" data-id="haval-dargo" data-brand="HAVAL" data-body="Кроссовер" data-fuel="Бензин" data-price="25000" data-name="HAVAL Dargo" data-description="Кроссовер с высоким кузовом и выраженным внедорожным дизайном.">
   <div class="vehicle-media vehicle-media--cutout">
     <img src="img/haval-dargo.webp" alt="HAVAL Dargo" loading="lazy" decoding="async">
     <span class="vehicle-type">Бензин</span>
@@ -254,7 +269,7 @@
     </div>
   </div>
 </article>
-<article class="vehicle" data-id="bmw-x3" data-brand="BMW" data-body="Кроссовер" data-fuel="Бензин / гибрид" data-price="47400" data-name="BMW X3" data-description="Кроссовер среднего размера. Год, двигатель и комплектацию можно выбрать при подборе.">
+<article id="bmw-x3" class="vehicle" data-id="bmw-x3" data-brand="BMW" data-body="Кроссовер" data-fuel="Бензин / гибрид" data-price="47400" data-name="BMW X3" data-description="Кроссовер среднего размера. Год, двигатель и комплектацию можно выбрать при подборе.">
   <div class="vehicle-media vehicle-media--photo">
     <img src="img/bmw-x3.webp?v=3" alt="BMW X3" loading="lazy" decoding="async">
     <span class="vehicle-type">Бензин / гибрид</span>
@@ -270,7 +285,7 @@
     </div>
   </div>
 </article>
-<article class="vehicle" data-id="bmw-x5" data-brand="BMW" data-body="Кроссовер" data-fuel="Бензин / гибрид" data-price="67800" data-name="BMW X5" data-description="Крупный кроссовер. Стоимость заметно зависит от двигателя, поколения и пробега.">
+<article id="bmw-x5" class="vehicle" data-id="bmw-x5" data-brand="BMW" data-body="Кроссовер" data-fuel="Бензин / гибрид" data-price="67800" data-name="BMW X5" data-description="Крупный кроссовер. Стоимость заметно зависит от двигателя, поколения и пробега.">
   <div class="vehicle-media vehicle-media--photo">
     <img src="img/bmw-x5.webp?v=3" alt="BMW X5" loading="lazy" decoding="async">
     <span class="vehicle-type">Бензин / гибрид</span>
@@ -286,7 +301,7 @@
     </div>
   </div>
 </article>
-<article class="vehicle" data-id="audi-q5" data-brand="Audi" data-body="Кроссовер" data-fuel="Бензин / дизель" data-price="45200" data-name="Audi Q5" data-description="Кроссовер среднего размера. На рынке есть бензиновые и дизельные варианты.">
+<article id="audi-q5" class="vehicle" data-id="audi-q5" data-brand="Audi" data-body="Кроссовер" data-fuel="Бензин / дизель" data-price="45200" data-name="Audi Q5" data-description="Кроссовер среднего размера. На рынке есть бензиновые и дизельные варианты.">
   <div class="vehicle-media vehicle-media--photo">
     <img src="img/audi-q5.webp" alt="Audi Q5" loading="lazy" decoding="async">
     <span class="vehicle-type">Бензин / дизель</span>
@@ -358,4 +373,4 @@
     <p class="model-note">Фото иллюстрирует модель. Итоговая стоимость зависит от конкретного автомобиля и маршрута доставки.</p>
     <a class="action-button">Подобрать в Telegram ↗</a>
   </div>
-</dialog><footer class="site-footer"><span>© 2026 Дмитрий Некрашевич</span><a href="index.html">На главную ↗</a><a href="mailto:nixon0293@gmail.com">nixon0293@gmail.com</a><a href="https://t.me/dmittrixx">Telegram @dmittrixx ↗</a></footer><script src="motion-library.js"></script><script src="pages.js?v=submit-final"></script><script src="effects.js?v=20261118"></script><script src="studio.js?v=drive-studio2"></script><script src="navigation.js?v=studio-nav4"></script><script src="quick-budget.js"></script></body></html>
+</dialog><footer class="site-footer"><span>© 2026 Дмитрий Некрашевич</span><a href="index.html">На главную ↗</a><a href="mailto:nixon0293@gmail.com">nixon0293@gmail.com</a><a href="https://t.me/dmittrixx">Telegram @dmittrixx ↗</a></footer><script src="vendor/motion.js"></script><script src="pages.js?v=submit-final"></script><script src="effects.js?v=20261118"></script><script src="studio.js?v=drive-studio2"></script><script src="navigation.js?v=studio-nav4"></script><script src="quick-budget.js"></script></body></html>

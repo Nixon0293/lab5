@@ -56,7 +56,7 @@
       animation.finished.then(() => animations.delete(animation)).catch(() => {});
     });
   }, { threshold:.15 });
-  document.querySelectorAll('.shot__frame,.catalog-feature').forEach(frame => entrance.observe(frame));
+  document.querySelectorAll('.catalog-feature').forEach(frame => entrance.observe(frame));
   const panels = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;

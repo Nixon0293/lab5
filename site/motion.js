@@ -7,7 +7,7 @@
   const sticky = route.querySelector('.roadshow__sticky');
   const stages = [...route.querySelectorAll('.journey-stage')];
   const meter = route.querySelector('.journey-distance b');
-  const heroCar = hero.querySelector('.drive-car');
+  const heroCar = hero?.querySelector('.drive-car');
   const routeCar = journey.querySelector('.drive-car');
   const preference = matchMedia('(prefers-reduced-motion: reduce)');
   const duration = 1.45;
@@ -26,6 +26,7 @@
   }
 
   function drawHero() {
+    if (!heroCar) return;
     const t = preference.matches ? 1 : clamp(arrival / duration);
     const distance = heroCar.offsetLeft + heroCar.offsetWidth + 24;
     const remaining = (1 - t) ** 2.65;
@@ -43,8 +44,10 @@
     const progress = preference.matches ? 1 : clamp(-route.getBoundingClientRect().top / (travel * .7));
     const width = routeCar.offsetWidth;
     const margin = journey.clientWidth * .04;
-    const distance = Math.max(0, journey.clientWidth - width - margin * 2) * progress;
-    setPosition(journey, margin + distance, distance, width * .07);
+    const start = -width;
+    const end = Math.max(0, journey.clientWidth - width - margin);
+    const distance = (end - start) * progress;
+    setPosition(journey, start + distance, distance, width * .07);
     route.style.setProperty('--journey', progress.toFixed(4));
     const percent = Math.floor(progress * 100);
     if (lastPercent === percent) return;
@@ -78,7 +81,7 @@
     frame = requestAnimationFrame(update);
   }
 
-  new IntersectionObserver(entries => {
+  if (hero) new IntersectionObserver(entries => {
     heroVisible = entries[0].isIntersecting;
     schedule();
   }).observe(hero);

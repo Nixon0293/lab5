@@ -16,8 +16,10 @@
 <link rel="stylesheet" href="studio.css?v=20261116">
 <link rel="stylesheet" href="refined.css?v=studio-nav4">
   <link rel="stylesheet" href="home-finish.css?v=achievement-grid4">
+  <link rel="stylesheet" href="automotive.css?v=studio-specs">
+  <script type="importmap">{"imports":{"three":"./three/build/three.module.js"}}</script>
 </head>
-<body>
+<body class="automotive">
   <a class="skip-link" href="#home">К содержимому</a>
 
   <!-- Курсор и индикатор прокрутки -->
@@ -40,6 +42,7 @@
     <nav class="nav" id="nav" aria-label="Основное меню">
       <ul class="nav__list">
         <li><a href="#home" class="nav__link" data-num="01" aria-current="page"><span class="roll">Главная</span></a></li>
+        <li><a href="#configurator" class="nav__link">3D-студия</a></li>
         <li><a href="#achievements" class="nav__link" data-num="02"><span class="roll">Достижения</span></a></li>
         <li><a href="#tech" class="nav__link" data-num="03"><span class="roll">Технологии</span></a></li>
         <li><a href="#cars" class="nav__link" data-num="04"><span class="roll">Галерея</span></a></li>
@@ -61,53 +64,81 @@
   <main>
 
     <!-- ===================== СЕКЦИЯ 1: HERO ===================== -->
-    <section class="hero" id="home" data-theme="dark">
-      <div class="hero-photo-backdrop" aria-hidden="true"></div>
-      <div class="hero__ghost" aria-hidden="true" data-hshift="-0.12">Некрашевич</div>
-
-      <div class="hero__inner">
-        <div class="hero__text">
-          <p class="hero__tag"><i class="dot"></i> Дмитрий Некрашевич · Минск</p>
-
-          <h1 class="hero__title" id="heroTitle">
-            <span class="line"><span>Подбираю</span></span>
-            <span class="line"><span>и привожу <em>авто</em></span></span>
-          </h1>
-
-
-          <p class="hero__desc">Я Дмитрий. Помогу выбрать автомобиль под ваш бюджет, проверю его перед покупкой и организую доставку до передачи ключей.</p>
-
-          <div class="hero__actions">
-            <a href="https://t.me/dmittrixx" class="btn btn--primary"><span>Написать в Telegram</span><b class="btn__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></b></a>
-            <a href="catalog.html" class="btn btn--ghost"><span>Каталог автомобилей ↗</span></a>
-          </div>
-        </div>
-
-        <div class="hero__visual" id="heroVisual">
-          <span class="hero__arch-back" aria-hidden="true"></span>
-          <div class="arch" id="arch">
-            <img class="arch__img arch__img--portrait" src="img/photo.jpg" alt="Дмитрий Некрашевич" width="400" height="400" fetchpriority="high">
-          </div>
-
-          <ul class="pills" aria-hidden="true">
-            <li class="pill pill--a">200+ клиентов</li>
-            <li class="pill pill--b">Под ключ</li>
-            <li class="pill pill--c">4 региона</li>
-          </ul>
+    <section class="auto-hero" id="home" data-theme="dark">
+      <div class="auto-hero__photo"></div>
+      <div class="auto-hero__copy">
+        <p class="auto-kicker">Подбор и привоз авто · Минск</p>
+        <h1>Дмитрий <em>Некрашевич</em></h1>
+        <p>Помогаю выбрать автомобиль под ваш бюджет. Проверяю машину и документы, организую доставку и сопровождаю сделку до передачи ключей.</p>
+        <div class="auto-actions">
+          <a class="auto-button" href="https://t.me/dmittrixx">Обсудить подбор ↗</a>
+          <a class="auto-button auto-button--outline" href="#configurator">Выбрать цвет в 3D ↓</a>
         </div>
       </div>
+      <div class="auto-hero__portrait">
+          <img class="auto-portrait" src="img/photo.jpg" alt="Дмитрий Некрашевич" width="400" height="400" fetchpriority="high">
+      </div>
+      <a class="auto-scroll" href="#porsche-reveal" aria-label="К истории Porsche">↓</a>
+    </section>
 
-      <div class="drive-scene drive-scene--hero" aria-hidden="true"><div class="drive-scene__haze"></div><div class="drive-scene__horizon"></div><div class="drive-scene__road"></div><div class="drive-car"><div class="drive-car__shadow"></div><div class="drive-car__body"><img src="img/drive-coupe.webp" alt="" width="1536" height="512"><span class="drive-wheel drive-wheel--rear"></span><span class="drive-wheel drive-wheel--front"></span><span class="drive-car__tail"></span><span class="drive-car__beam"></span></div></div></div>
-      <div class="hero-route"><span>Китай / Корея / Европа / США</span><span>От первого запроса до передачи ключей ↗</span></div>
-      <a href="#visit-title" class="scroll-down" aria-label="К следующей секции"><i></i><span>Листай</span></a>
-
-      <div class="marquee" id="marquee" aria-hidden="true">
-        <div class="marquee__track" id="marqueeTrack">
-          <span>Китай</span><b>✱</b><span>Корея</span><b>✱</b><span>Европа</span><b>✱</b><span>США</span><b>✱</b>
-          <span>Китай</span><b>✱</b><span>Корея</span><b>✱</b><span>Европа</span><b>✱</b><span>США</span><b>✱</b>
-          <span>Китай</span><b>✱</b><span>Корея</span><b>✱</b><span>Европа</span><b>✱</b><span>США</span><b>✱</b>
-          <span>Китай</span><b>✱</b><span>Корея</span><b>✱</b><span>Европа</span><b>✱</b><span>США</span><b>✱</b>
+    <section id="porsche-reveal" class="porsche-reveal" aria-labelledby="reveal-title">
+      <div class="porsche-reveal__frame">
+        <div class="porsche-reveal__photo" aria-hidden="true">
+          <img src="img/gallery-road.jpg" alt="" width="1400" height="788" loading="lazy">
         </div>
+        <div class="porsche-reveal__next" aria-hidden="true">
+          <img src="img/gallery-porsche.jpg" alt="" width="864" height="570" loading="lazy">
+        </div>
+        <div class="porsche-reveal__copy">
+          <h2 id="reveal-title">Подбор цвета <em>в 3D</em></h2>
+          <a class="auto-button auto-button--outline" href="#configurator">Перейти к Carrera GT в 3D ↓</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="auto-config" id="configurator" aria-labelledby="config-title">
+      <header>
+        <p class="auto-kicker">Подбор цвета</p>
+        <h2 id="config-title">Porsche <em>Carrera GT</em></h2>
+        <p>Porsche Carrera GT — демонстрационная модель. На ней можно посмотреть, как краска выглядит с разных ракурсов, и прислать понравившийся оттенок как ориентир для подбора своего авто.</p>
+      </header>
+      <div class="auto-config-layout auto-studio">
+      <div>
+      <div class="auto-studio__viewer">
+        <div class="auto-stage" id="car-stage">
+
+          <button class="auto-button auto-start" id="start-3d" type="button" hidden>Повторить загрузку</button>
+          <p id="car-status" role="status">Подготовка 3D-модели…</p>
+        </div>
+        <aside class="gt-details" aria-label="Характеристики Porsche Carrera GT">
+          <h3>Характеристики</h3>
+          <dl class="gt-specs">
+            <div><dt>Двигатель</dt><dd>5,7 л · V10</dd></div>
+            <div><dt>Мощность</dt><dd>612 л. с.</dd></div>
+            <div><dt>0–100 км/ч</dt><dd>3,9 с</dd></div>
+            <div><dt>Макс. скорость</dt><dd>330 км/ч</dd></div>
+          </dl>
+          <a href="https://newsroom.porsche.com/pdf/17da8703-0d52-4ab7-8630-6e98ff05c194?print=">Данные Porsche ↗</a>
+        </aside>
+        <div class="auto-controls">
+          <fieldset disabled id="paint-options">
+            <legend>Цвет кузова</legend>
+            <div class="auto-swatches">
+              <label title="Серебристый"><input type="radio" name="paint" value="#a9acb0" checked><span style="--paint:#a9acb0"></span><span class="sr-only">Серебристый</span></label>
+              <label title="Графит"><input type="radio" name="paint" value="#303238"><span style="--paint:#303238"></span><span class="sr-only">Графит</span></label>
+              <label title="Бордовый"><input type="radio" name="paint" value="#661b2d"><span style="--paint:#661b2d"></span><span class="sr-only">Бордовый</span></label>
+              <label title="Тёмно-синий"><input type="radio" name="paint" value="#263d68"><span style="--paint:#263d68"></span><span class="sr-only">Тёмно-синий</span></label>
+            </div>
+          </fieldset>
+          <div class="auto-angles" id="car-angles" aria-label="Ракурс">
+            <button type="button" data-angle="0.9" disabled>Спереди</button>
+            <button type="button" data-angle="1.57" disabled>Сбоку</button>
+            <button type="button" data-angle="2.48" disabled>Сзади</button>
+          </div>
+        </div>
+      </div>
+      <a class="auto-button auto-config-contact" id="paint-contact" href="https://t.me/dmittrixx" hidden>Обсудить выбранный цвет ↗</a>
+      </div>
       </div>
     </section>
 
@@ -123,7 +154,7 @@
     </section>
 
     <!-- ===================== СЕКЦИЯ 2: МОИ ДОСТИЖЕНИЯ (Flexbox) ===================== -->
-    <div class="achievement-surround"><section class="achievements" id="achievements" data-theme="orange">
+    <div class="achievement-surround"><section class="achievements" id="achievements" data-theme="dark">
       <div class="ghost" aria-hidden="true" data-hshift="0.1">Результат</div>
 
       <div class="achievements__container">
@@ -183,6 +214,7 @@
               <div class="card__big" data-count="20" data-suffix="+" data-unit="ч / нед">0</div>
               <h3 class="card__title">Автоматизация CRM</h3>
               <p class="card__text">Перенёс повторяющиеся операции в CRM в скрипты Google Apps Script.</p>
+              <p class="achievement-detail">Автоматизация сократила ручную работу более чем на 20 часов в неделю.</p>
               
             </div>
           </article>
@@ -192,14 +224,14 @@
     </section></div>
 
     <!-- ===================== СЕКЦИЯ 3: ТЕХНОЛОГИИ (Grid) ===================== -->
-    <section class="tech" id="tech" data-theme="light">
+    <section class="tech" id="tech" data-theme="dark">
       <div class="ghost" aria-hidden="true" data-hshift="-0.1">Инструменты</div>
 
       <div class="tech__container">
         <header class="section-head">
           <span class="section-head__num">03 — Инструменты</span>
           <h2 class="section-head__title">Технологии, которыми я <em>владею</em></h2>
-          <p class="section-head__lead scrub">Продавать удобнее, когда рутину делают скрипты. Вот чем я пользуюсь в работе.</p>
+          <p class="section-head__lead scrub">Эти инструменты помогают мне вести заявки на подбор, следить за статусами заказов и быстрее отвечать клиентам.</p>
         </header>
 
         <div class="tech-grid">
@@ -209,7 +241,7 @@
             <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6c-7 0-9 3-9 6v4h10v2H11c-4 0-6 4-6 8s2 8 6 8h3v-5c0-3 3-6 6-6h10c3 0 5-2 5-5v-7c0-3-4-5-11-5z"/><path d="M24 42c7 0 9-3 9-6v-4H23v-2h14c4 0 6-4 6-8s-2-8-6-8h-3v5c0 3-3 6-6 6H18c-3 0-5 2-5 5v7c0 3 4 5 11 5z"/></svg></div>
             <div class="tcard__text">
               <h3>Python</h3>
-              <p>На Python собрал бота и панель для отслеживания заказов.</p>
+              <p>Собрал бота и панель, чтобы отслеживать заказы на автомобили.</p>
               <ul class="tags"><li>скрипты</li><li>API</li><li>автоматизация</li></ul>
             </div>
           </article>
@@ -219,7 +251,8 @@
             <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="8" width="34" height="32" rx="5"/><path d="M7 18h34M17 26l-4 4 4 4M31 26l4 4-4 4M26 24l-4 12"/></svg></div>
             <div class="tcard__text">
               <h3>Google Apps Script</h3>
-              <p>Автоматизирую обработку заявок в CRM и таблицах.</p>
+              <p>Автоматизирую обработку заявок на подбор в CRM и таблицах.</p>
+              <ul class="tags"><li>Заявки</li><li>Таблицы</li><li>CRM</li></ul>
             </div>
           </article>
 
@@ -228,7 +261,8 @@
             <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 24h10l4-12 8 24 4-12h10"/></svg></div>
             <div class="tcard__text">
               <h3>REST API и Postman</h3>
-              <p>Связываю сервисы и проверяю, что данные заказов передаются корректно.</p>
+              <p>Проверяю, что заявки на автомобили и статусы заказов передаются между сервисами без потерь.</p>
+              <ul class="tags"><li>Интеграции</li><li>Статусы заказов</li></ul>
             </div>
           </article>
 
@@ -237,7 +271,7 @@
             <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M42 8L6 22l10 4 4 12 6-7 9 7z"/><path d="M16 26l26-18"/></svg></div>
             <div class="tcard__text">
               <h3>Telegram-бот и дашборд</h3>
-              <p>Бот уведомляет о заказах, а панель показывает их статус.</p>
+              <p>Бот уведомляет о заказах на автомобили, а панель показывает, на каком этапе каждый заказ.</p>
               <ul class="tags"><li>уведомления</li><li>мониторинг заказов</li></ul>
             </div>
           </article>
@@ -247,7 +281,8 @@
             <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="16"/><circle cx="24" cy="24" r="6"/><path d="M24 8v10M24 30v10M8 24h10M30 24h10"/></svg></div>
             <div class="tcard__text">
               <h3>RetailCRM</h3>
-              <p>Храню историю обращений и этапы сделок в одном месте.</p>
+              <p>Веду историю обращений, чтобы помнить бюджет клиента и этап сделки.</p>
+              <ul class="tags"><li>Клиенты</li><li>Сделки</li></ul>
             </div>
           </article>
 
@@ -256,7 +291,8 @@
             <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><ellipse cx="24" cy="12" rx="15" ry="6"/><path d="M9 12v12c0 3 7 6 15 6s15-3 15-6V12M9 24v12c0 3 7 6 15 6s15-3 15-6V24"/></svg></div>
             <div class="tcard__text">
               <h3>Supabase (PostgreSQL)</h3>
-              <p>Храню данные заказов и связываю с CRM через API.</p>
+              <p>Храню данные заказов на автомобили и связываю их с CRM через API.</p>
+              <ul class="tags"><li>База заказов</li><li>API</li></ul>
             </div>
           </article>
 
@@ -265,7 +301,8 @@
             <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="8" width="10" height="32" rx="3"/><rect x="19" y="8" width="10" height="22" rx="3"/><rect x="32" y="8" width="10" height="27" rx="3"/></svg></div>
             <div class="tcard__text">
               <h3>Notion, Trello, Kaiten</h3>
-              <p>Отслеживаю задачи команды и то, что ещё нужно сделать по заказу.</p>
+              <p>Распределяю задачи по заказу и вижу, что осталось сделать до передачи авто.</p>
+              <ul class="tags"><li>Задачи</li><li>Команда</li></ul>
             </div>
           </article>
 
@@ -274,7 +311,8 @@
             <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="12" y="12" width="24" height="24" rx="5"/><path d="M20 20h8v8h-8zM18 6v6M30 6v6M18 36v6M30 36v6M6 18h6M6 30h6M36 18h6M36 30h6"/></svg></div>
             <div class="tcard__text">
               <h3>AI-инструменты</h3>
-              <p>Прошёл курс AI for Business &amp; Productivity и применяю ИИ для анализа.</p>
+              <p>Использую ИИ для анализа информации при работе с автомобильными заявками.</p>
+              <ul class="tags"><li>ИИ</li><li>Анализ заявок</li></ul>
             </div>
           </article>
 
@@ -283,7 +321,7 @@
             <div class="tcard__icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M16 14L6 24l10 10M32 14l10 10-10 10M27 10l-6 28"/></svg></div>
             <div class="tcard__text">
               <h3>HTML, CSS и JavaScript</h3>
-              <p>Учусь верстать: этот сайт собран на чистом HTML, CSS (Flexbox и Grid) и JavaScript.</p>
+              <p>Собрал витрину моделей и инструменты сайта, чтобы клиент мог сравнить автомобили и оценить расходы на привоз.</p>
               <ul class="tags"><li>Flexbox</li><li>Grid</li><li>адаптив</li></ul>
             </div>
           </article>
@@ -297,28 +335,75 @@
       <div class="cars__glow" aria-hidden="true"></div>
       <div class="cars__container">
         <header class="section-head">
-          <span class="section-head__num">04 — Галерея</span>
-          <h2 class="section-head__title">Привожу авто, <em>о которых</em> мечтают</h2>
-          <p class="section-head__lead scrub">Любая марка и любая комплектация. Найду, проверю, довезу и оформлю.</p>
+          <span class="section-head__num">04 — Выбор автомобиля</span>
+          <h2 class="section-head__title">Начните с <em>мечты</em></h2>
+          <p class="section-head__lead scrub">Несколько моделей из каталога. Подберу автомобиль под ваш бюджет и требования.</p>
         </header>
 
-        <div class="gallery">
-          <figure class="shot shot--tall reveal">
-            <a class="shot__frame" href="catalog.html" aria-label="Смотреть каталог автомобилей"><img src="img/gallery-bmw.jpg" alt="Реальная фотография BMW M4 на дороге" loading="lazy" width="488" height="627"></a>
-            <figcaption><i>01</i> Подбор <em>под вас</em></figcaption>
-          </figure>
-          <figure class="shot shot--wide reveal">
-            <a class="shot__frame" href="catalog.html" aria-label="Смотреть каталог автомобилей"><img src="img/gallery-porsche.jpg" alt="Реальная фотография чёрного Porsche 911 в городе" loading="lazy" width="864" height="570"></a>
-            <figcaption><i>02</i> Проверка <em>до покупки</em></figcaption>
-          </figure>
-          <figure class="shot shot--mid reveal">
-            <a class="shot__frame" href="catalog.html" aria-label="Смотреть каталог автомобилей"><img src="img/gallery-road.jpg" alt="Реальная фотография белого Porsche 911 на загородной дороге" loading="lazy" width="780" height="981"></a>
-            <figcaption><i>03</i> Доставка <em>без хлопот</em></figcaption>
-          </figure>
+        <div class="gallery-story">
+          <div class="gallery-controls" aria-label="Листать модели" hidden>
+            <button type="button" data-gallery-step="-1" aria-controls="model-rail" aria-label="Предыдущие модели">←</button>
+            <button type="button" data-gallery-step="1" aria-controls="model-rail" aria-label="Следующие модели">→</button>
+          </div>
+          <div class="gallery-window" id="model-rail" role="region" aria-label="Подборка моделей" tabindex="0">
+            <div class="gallery">
+              <article class="shot model-preview">
+                <a class="model-preview__photo" href="catalog.html#geely-monjaro" aria-label="Открыть Geely Monjaro в каталоге">
+                  <img src="img/geely-monjaro.webp" alt="Geely Monjaro" loading="lazy" decoding="async">
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <p class="model-preview__meta">Geely · Кроссовер</p>
+                <h3>Geely Monjaro</h3>
+                <p class="model-preview__price"><span>Ориентир привоза</span><strong>$29 500</strong></p>
+                <a class="model-preview__link" href="catalog.html#geely-monjaro">Подробнее →</a>
+              </article>
+              <article class="shot model-preview">
+                <a class="model-preview__photo" href="catalog.html#haval-dargo" aria-label="Открыть HAVAL Dargo в каталоге">
+                  <img src="img/haval-dargo.webp" alt="HAVAL Dargo" loading="lazy" decoding="async">
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <p class="model-preview__meta">HAVAL · Кроссовер</p>
+                <h3>HAVAL Dargo</h3>
+                <p class="model-preview__price"><span>Ориентир привоза</span><strong>$25 000</strong></p>
+                <a class="model-preview__link" href="catalog.html#haval-dargo">Подробнее →</a>
+              </article>
+              <article class="shot model-preview">
+                <a class="model-preview__photo" href="catalog.html#bmw-x3" aria-label="Открыть BMW X3 в каталоге">
+                  <img src="img/bmw-x3.webp?v=3" alt="BMW X3" loading="lazy" decoding="async">
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <p class="model-preview__meta">BMW · Кроссовер</p>
+                <h3>BMW X3</h3>
+                <p class="model-preview__price"><span>Ориентир привоза</span><strong>$47 400</strong></p>
+                <a class="model-preview__link" href="catalog.html#bmw-x3">Подробнее →</a>
+              </article>
+              <article class="shot model-preview">
+                <a class="model-preview__photo" href="catalog.html#audi-q5" aria-label="Открыть Audi Q5 в каталоге">
+                  <img src="img/audi-q5.webp" alt="Audi Q5" loading="lazy" decoding="async">
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <p class="model-preview__meta">Audi · Кроссовер</p>
+                <h3>Audi Q5</h3>
+                <p class="model-preview__price"><span>Ориентир привоза</span><strong>$45 200</strong></p>
+                <a class="model-preview__link" href="catalog.html#audi-q5">Подробнее →</a>
+              </article>
+              <article class="shot model-preview">
+                <a class="model-preview__photo" href="catalog.html#bmw-x5" aria-label="Открыть BMW X5 в каталоге">
+                  <img src="img/bmw-x5.webp?v=3" alt="BMW X5" loading="lazy" decoding="async">
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <p class="model-preview__meta">BMW · Кроссовер</p>
+                <h3>BMW X5</h3>
+                <p class="model-preview__price"><span>Ориентир привоза</span><strong>$67 800</strong></p>
+                <a class="model-preview__link" href="catalog.html#bmw-x5">Подробнее →</a>
+              </article>
+            </div>
+          </div>
         </div>
-        <div class="gallery-bottom"><p>Автомобили для вдохновения · фотографии Unsplash</p><a href="catalog.html">Перейти в каталог автомобилей ↗</a></div>
+        <div class="gallery-bottom"><p>Цены ориентировочные. Итог зависит от комплектации, доставки и оформления.</p><a href="catalog.html">Перейти в каталог автомобилей ↗</a></div>
       </div>
     </section>
+
 
     <!-- ===================== ВЫЕЗД МАШИНЫ ПРИ ПРОКРУТКЕ ===================== -->
     <section class="roadshow" id="roadshow" data-theme="dark" aria-label="Автомобиль в пути">
@@ -390,16 +475,28 @@
       </div>
     </section>
 
+    <section class="auto-film" aria-labelledby="film-title">
+      <div class="auto-film__inner">
+        <h2 id="film-title">Porsche в движении</h2>
+        <iframe class="auto-film__player" src="https://www.youtube-nocookie.com/embed/CHXgRtD1-DQ?autoplay=1&amp;mute=1&amp;playsinline=1"
+          title="Видео Porsche на YouTube" width="1280" height="720" loading="lazy"
+          allow="autoplay; accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <a href="https://www.youtube.com/watch?v=CHXgRtD1-DQ">Смотреть на YouTube ↗</a>
+      </div>
+    </section>
   </main>
 
   <footer class="footer">
     <span>© 2026 Дмитрий Некрашевич</span>
     <span>Минск · Sales Manager</span>
     <a href="#home" class="footer__up"><span class="roll">Наверх ↑</span></a>
+    <p class="auto-credit"><a href="https://sketchfab.com/3d-models/porsche-carrera-gt-2003-street-1880cd019d6f4bc2a8aec8a220bd5f0c">3D-модель Pitstop 3D – Euro</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p>
   </footer>
 
   <script src="script.js?v=drive-studio2"></script>
-  <script src="motion.js?v=arrival-film1"></script>
+  <script src="motion.js?v=edge-route"></script>
   <script src="effects.js?v=20261118-2"></script>
-<script src="studio.js?v=drive-studio2"></script><script src="navigation.js?v=studio-nav4"></script></body>
+<script src="studio.js?v=portfolio-photo"></script><script src="navigation.js?v=studio-nav4"></script><script type="module" src="configurator.js?v=fit-camera"></script>
+<script src="porsche-reveal.js?v=polished-cards" defer></script>
+</body>
 </html>
