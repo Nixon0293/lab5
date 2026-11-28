@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Лабораторная работа №6 — CSS Grid</title>
+    <style>
+        body {
+            display: grid;
+            place-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 4fr 2fr 6fr 3fr;
+            grid-template-rows: 76px 76px 156px 34px;
+            grid-template-areas:
+                "wide wide full ."
+                "lower lower lower ."
+                "large . . ."
+                ". . . footer";
+            width: 90%;
+            max-width: 600px;
+            gap: 5px;
+            padding: 8px;
+            background: #f2f2f2;
+        }
+
+        .block {
+            display: grid;
+            place-items: center;
+            padding: 4px;
+            border-radius: 5px;
+            color: #252525;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .wide { grid-area: wide; background: #a1e8af; }
+        .full { grid-area: full; background: #ffe156; }
+        .lower { grid-area: lower; background: #ff9f1c; }
+        .large { grid-area: large; background: #ffb6b9; }
+        .footer { grid-area: footer; background: #4d96ff; }
+    </style>
+</head>
+<body>
+    <main class="grid">
+        <div class="block wide">Широкий блок</div>
+        <div class="block full">Во всю ширину</div>
+        <div class="block lower">Нижний блок</div>
+        <div class="block large">Большой блок</div>
+        <footer class="block footer">Футер</footer>
+    </main>
+</body>
+</html>
